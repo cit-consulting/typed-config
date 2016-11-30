@@ -16,6 +16,8 @@
 
 package com.github.steveash.typedconfig.resolver.type.container;
 
+import com.github.steveash.typedconfig.ConfigFactoryContext;
+import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableMap;
@@ -27,6 +29,8 @@ import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.annotation.MapKey;
 import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -119,6 +123,27 @@ public class MapValueResolverFactory extends AbstractContainerValueResolverFacto
         throw new InvalidProxyException("If you use a Map type in a proxy you must use the @MapKey annotation " +
                 " to indicate what child property should be the key.  Can't create map for config key: " +
                 binding.getConfigKeyToLookup() + " for map type " + binding.getDataType());
+    }
+
+    @Override
+    public ValueResolver makeForThis(ConfigBinding binding, HierarchicalConfiguration config, ConfigFactoryContext context) {
+        return new ValueResolver() {
+            @Override
+            public Configuration resolve() {
+                return config;
+            }
+
+            @Override
+            public Configuration convertDefaultValue(String defaultValue) {
+                throw new IllegalStateException("should never happen as cant default the configuration node. cant " +
+                        "use configuration inside of a container type");
+            }
+
+            @Override
+            public String configurationKeyToLookup() {
+                return binding.getConfigKeyToLookup();
+            }
+        };
     }
 
     @Override

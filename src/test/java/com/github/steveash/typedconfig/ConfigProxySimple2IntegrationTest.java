@@ -1,6 +1,8 @@
 package com.github.steveash.typedconfig;
 
-import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import com.github.steveash.typedconfig.annotation.Config;
@@ -26,8 +28,9 @@ public class ConfigProxySimple2IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        proxy = ConfigProxyFactory.getDefault().make(Simple2.class,
-                new XMLConfiguration("simple2Integration.xml"));
+        proxy = ConfigProxyFactory.getDefault()
+                .make(Simple2.class, new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                        .configure(new Parameters().properties().setFileName("simple2Integration.xml")).getConfiguration());
     }
 
     @Test

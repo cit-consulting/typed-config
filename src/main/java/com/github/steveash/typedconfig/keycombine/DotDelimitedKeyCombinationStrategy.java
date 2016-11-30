@@ -19,6 +19,7 @@ package com.github.steveash.typedconfig.keycombine;
 /**
  * Smartly combines them so that a single dot separates the base key and the local key which is probably what
  * you want if you are using the default expression engine
+ *
  * @author Steve Ash
  */
 public class DotDelimitedKeyCombinationStrategy extends DelimitedKeyCombinationStrategy {

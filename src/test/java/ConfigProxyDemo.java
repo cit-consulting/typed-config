@@ -1,33 +1,38 @@
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.XMLConfiguration;
-
-import com.github.steveash.typedconfig.annotation.Config;
-import com.github.steveash.typedconfig.annotation.ConfigProxy;
 import com.github.steveash.typedconfig.ConfigProxyFactory;
 import com.github.steveash.typedconfig.Option;
+import com.github.steveash.typedconfig.annotation.Config;
+import com.github.steveash.typedconfig.annotation.ConfigProxy;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 
 public class ConfigProxyDemo {
-	@ConfigProxy
-	static interface CarConfiguration {
-		@Config(value="doors", defaultValue = "4")
-		int getDoors();
+    public static void main(final String[] args) throws ConfigurationException {
+        CarConfiguration configuration = ConfigProxyFactory.getDefault()
+                .make(CarConfiguration.class, (HierarchicalConfiguration) new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                        .configure(new Parameters().properties()
+                                .setFileName("car.xml")));
 
-		@Config(value="[@name]")
-		String getName();
+        System.out.println("Building a '" + configuration.getName() +
+                "' with " + configuration.getDoors() + " doors");
 
-		@Config(value="air-conditioning", options = Option.CHECK_KEY_EXISTS)
-		boolean hasAirConditioning();
-	}
+        if (configuration.hasAirConditioning()) {
+            System.out.println("This car has airconditioning");
+        }
+    }
 
-	public static void main(final String[] args) throws ConfigurationException {
-		CarConfiguration configuration = ConfigProxyFactory.getDefault().make(CarConfiguration.class, new XMLConfiguration("car.xml"));
+    @ConfigProxy
+    static interface CarConfiguration {
+        @Config(value = "doors", defaultValue = "4")
+        int getDoors();
 
-		System.out.println("Building a '" + configuration.getName() +
-				"' with " + configuration.getDoors() + " doors");
+        @Config(value = "[@name]")
+        String getName();
 
-		if (configuration.hasAirConditioning()) {
-			System.out.println("This car has airconditioning");
-		}
-	}
+        @Config(value = "air-conditioning", options = Option.CHECK_KEY_EXISTS)
+        boolean hasAirConditioning();
+    }
 }

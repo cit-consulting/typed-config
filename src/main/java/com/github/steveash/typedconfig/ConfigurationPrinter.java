@@ -16,10 +16,9 @@
 
 package com.github.steveash.typedconfig;
 
-import java.util.Iterator;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.tree.ConfigurationNode;
+import java.util.Iterator;
 
 /**
  * @author Steve Ash
@@ -29,7 +28,7 @@ public class ConfigurationPrinter {
     public String printToString(HierarchicalConfiguration config) {
         StringBuilder sb = new StringBuilder();
 
-        String name = (config.getRootNode() != null ? config.getRootNode().getName() : "");
+        String name = config.getRootElementName();
         sb.append("Configuration root: ").append(name).append("\n");
         sb.append("----------------------------------\n");
         Iterator<String> keys = config.getKeys();

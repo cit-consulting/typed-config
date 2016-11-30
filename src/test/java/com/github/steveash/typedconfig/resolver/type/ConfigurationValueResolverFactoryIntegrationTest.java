@@ -16,13 +16,15 @@
 
 package com.github.steveash.typedconfig.resolver.type;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-import org.junit.Before;
-import org.junit.Test;
 import com.github.steveash.typedconfig.ConfigProxyFactory;
 import com.github.steveash.typedconfig.annotation.Config;
 import com.github.steveash.typedconfig.annotation.MapKey;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Map;
 
@@ -35,8 +37,23 @@ public class ConfigurationValueResolverFactoryIntegrationTest {
     private Proxy proxy;
     private XMLConfiguration xmlConfig;
 
+    @Before
+    public void setUp() throws Exception {
+        xmlConfig = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                .configure(new Parameters().properties().setFileName("configIntegration.xml")).getConfiguration();
+        proxy = ConfigProxyFactory.getDefault()
+                .make(Proxy.class, xmlConfig);
+    }
+
+    @Test
+    public void testConfiguration() throws Exception {
+        assertEquals(42, proxy.getConfig().getInt("a"));
+        assertEquals("steve", proxy.getChildren().get("steve").getConfig().getString("name"));
+    }
+
     static interface Proxy {
         int getA();
+
         HierarchicalConfiguration getConfig();
 
         @MapKey("name")
@@ -46,18 +63,7 @@ public class ConfigurationValueResolverFactoryIntegrationTest {
 
     static interface Child {
         String getName();
+
         HierarchicalConfiguration getConfig();
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        xmlConfig = new XMLConfiguration("configIntegration.xml");
-        proxy = ConfigProxyFactory.getDefault().make(Proxy.class, xmlConfig);
-    }
-
-    @Test
-    public void testConfiguration() throws Exception {
-        assertEquals(42, proxy.getConfig().getInt("a"));
-        assertEquals("steve", proxy.getChildren().get("steve").getConfig().getString("name"));
     }
 }

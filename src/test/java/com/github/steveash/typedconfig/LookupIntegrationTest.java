@@ -16,15 +16,16 @@
 
 package com.github.steveash.typedconfig;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
-import org.apache.commons.configuration.XMLConfiguration;
+import com.github.steveash.typedconfig.annotation.Config;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.steveash.typedconfig.annotation.Config;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Steve Ash
@@ -32,6 +33,20 @@ import com.github.steveash.typedconfig.annotation.Config;
 public class LookupIntegrationTest {
 
     private House proxy;
+
+    @Before
+    public void setUp() throws Exception {
+        proxy = ConfigProxyFactory.getDefault()
+                .make(House.class, new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                        .configure(new Parameters().properties().setFileName("lookupIntegration.xml")).getConfiguration());
+    }
+
+    @Test
+    public void shouldReturnLookedupValue() throws Exception {
+        assertEquals(3, proxy.getPeople().size());
+        assertEquals("father", proxy.getPeople().get(1).getTitle());
+        assertEquals("father", proxy.getHeadOfHouse().getTitle());
+    }
 
     static interface Person {
         String getTitle();
@@ -43,17 +58,5 @@ public class LookupIntegrationTest {
 
         @Config("people.person")
         List<Person> getPeople();
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        proxy = ConfigProxyFactory.getDefault().make(House.class, new XMLConfiguration("lookupIntegration.xml"));
-    }
-
-    @Test
-    public void shouldReturnLookedupValue() throws Exception {
-        assertEquals(3, proxy.getPeople().size());
-        assertEquals("father", proxy.getPeople().get(1).getTitle());
-        assertEquals("father", proxy.getHeadOfHouse().getTitle());
     }
 }

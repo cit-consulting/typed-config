@@ -1,7 +1,7 @@
 package com.github.steveash.typedconfig.resolver;
 
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Test;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.resolver.type.simple.ByteValueResolverFactory;

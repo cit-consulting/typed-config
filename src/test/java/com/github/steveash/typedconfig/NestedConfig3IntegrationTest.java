@@ -16,7 +16,10 @@
 
 package com.github.steveash.typedconfig;
 
-import org.apache.commons.configuration.XMLConfiguration;
+import com.github.steveash.typedconfig.resolver.type.ConfigurationValueResolverFactoryIntegrationTest;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.junit.Before;
 import org.junit.Test;
 import com.github.steveash.typedconfig.annotation.Config;
@@ -62,7 +65,9 @@ public class NestedConfig3IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        proxy = ConfigProxyFactory.getDefault().make(Proxy.class, new XMLConfiguration("nestedConfig3.xml"));
+        proxy = ConfigProxyFactory.getDefault()
+                .make(Proxy.class, new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                        .configure(new Parameters().properties().setFileName("nestedConfig3.xml")).getConfiguration());
     }
 
     @Test

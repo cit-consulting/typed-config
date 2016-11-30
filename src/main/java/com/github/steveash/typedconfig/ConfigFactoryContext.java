@@ -16,16 +16,6 @@
 
 package com.github.steveash.typedconfig;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
-import com.google.common.reflect.TypeToken;
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.github.steveash.typedconfig.annotation.Config;
 import com.github.steveash.typedconfig.annotation.ConfigProxy;
 import com.github.steveash.typedconfig.caching.CacheStrategy;
@@ -36,6 +26,15 @@ import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolverRegistry;
 import com.github.steveash.typedconfig.resolver.ValueType;
 import com.github.steveash.typedconfig.validation.ValidationStrategy;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
+import com.google.common.reflect.TypeToken;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.EventListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -48,7 +47,7 @@ import java.util.List;
  *
  * @author Steve Ash
  */
-public class ConfigFactoryContext implements ConfigurationListener {
+public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
     private static final Logger log = LoggerFactory.getLogger(ConfigFactoryContext.class);
 
     private final ValueResolverRegistry registry;
@@ -77,10 +76,9 @@ public class ConfigFactoryContext implements ConfigurationListener {
      * use any decorators or anything just the binding and the value type for the factory that is chosen
      * by the registry
      *
-     *
      * @param config
      * @param newMethodBinding
-     *@param parentBinding @return
+     * @param parentBinding    @return
      */
     public ValueResolver makeResolverForBinding(HierarchicalConfiguration config, ConfigBinding newMethodBinding,
                                                 ConfigBinding parentBinding) {
@@ -94,8 +92,8 @@ public class ConfigFactoryContext implements ConfigurationListener {
             case Nested:
                 Preconditions.checkNotNull(parentBinding);
                 // config points to the location of the nested context
-                SubnodeConfiguration subConfig = config.configurationAt(newMethodBinding.getConfigKeyToLookup(), true);
-                ConfigBinding subBinding = newMethodBinding.withKey(subConfig.getSubnodeKey());
+                HierarchicalConfiguration subConfig = config.configurationAt(newMethodBinding.getConfigKeyToLookup(), true);
+                ConfigBinding subBinding = newMethodBinding.withKey(subConfig.getRootElementName());
                 return factory.makeForThis(subBinding, subConfig, this);
 
             default:
@@ -108,8 +106,8 @@ public class ConfigFactoryContext implements ConfigurationListener {
     }
 
     public ValueResolverRegistry getRegistry() {
-           return registry;
-       }
+        return registry;
+    }
 
     public ValidationStrategy getValidationStrategy() {
         return validationStrategy;
@@ -139,6 +137,7 @@ public class ConfigFactoryContext implements ConfigurationListener {
      * Given the class and method on the proxy this will create a new ConfigBinding whcih represents a particular
      * "binding" between a proxy call site and the configuration target (not the configuration instance, but the
      * location (key) within a configuration instance (w.r.t the same configuration context))
+     *
      * @param interfaze
      * @param method
      * @param config
@@ -179,7 +178,7 @@ public class ConfigFactoryContext implements ConfigurationListener {
     }
 
     @Override
-    public void configurationChanged(ConfigurationEvent event) {
+    public void onEvent(ConfigurationEvent event) {
         if (event.isBeforeUpdate())
             return;
 

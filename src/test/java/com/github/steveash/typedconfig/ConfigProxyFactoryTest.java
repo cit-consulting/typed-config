@@ -18,7 +18,7 @@ package com.github.steveash.typedconfig;
 
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.ConfigProxyFactory;
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;

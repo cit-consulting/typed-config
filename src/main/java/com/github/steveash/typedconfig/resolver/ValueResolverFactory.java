@@ -16,9 +16,9 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * @author Steve Ash

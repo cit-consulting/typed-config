@@ -19,6 +19,7 @@ package com.github.steveash.typedconfig.keycombine;
 /**
  * Smartly combines them so that a single slash separates the base key and the local key which is probably what
  * you want if you are using the XPATH expression engine
+ *
  * @author Steve Ash
  */
 public class SlashDelimitedKeyCombinationStrategy extends DelimitedKeyCombinationStrategy {

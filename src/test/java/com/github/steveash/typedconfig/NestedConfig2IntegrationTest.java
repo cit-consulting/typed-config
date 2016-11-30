@@ -16,7 +16,9 @@
 
 package com.github.steveash.typedconfig;
 
-import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +53,9 @@ public class NestedConfig2IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        proxy = ConfigProxyFactory.getDefault().make(Proxy.class, new XMLConfiguration("nestedConfig2.xml"));
+        proxy = ConfigProxyFactory.getDefault()
+                .make(Proxy.class, new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                        .configure(new Parameters().properties().setFileName("nestedConfig2.xml")).getConfiguration());
     }
 
     @Test

@@ -16,15 +16,16 @@
 
 package com.github.steveash.typedconfig.keycombine;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.tree.DefaultExpressionEngine;
-import org.apache.commons.configuration.tree.ExpressionEngine;
-import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration2.tree.ExpressionEngine;
+import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 
 /**
  * A "smart" strategy that inspects the expression engine and uses its combination delimiter if its the
  * default engine or uses a slash if its the XPath engine.  If its some custom expression engine then it
  * just defaults to dot
+ *
  * @author Steve Ash
  */
 public class SmartDelimitedKeyCombinationStrategy implements KeyCombinationStrategy {
@@ -38,7 +39,7 @@ public class SmartDelimitedKeyCombinationStrategy implements KeyCombinationStrat
         ExpressionEngine xengine = config.getExpressionEngine();
         if (xengine instanceof DefaultExpressionEngine) {
             DefaultExpressionEngine defaultEngine = (DefaultExpressionEngine) xengine;
-            String delim = defaultEngine.getPropertyDelimiter();
+            String delim = defaultEngine.getSymbols().getPropertyDelimiter();
             return getStrategyForDelim(delim).combineKey(baseKey, localKey, config);
         }
 

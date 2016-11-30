@@ -16,10 +16,11 @@
 
 package com.github.steveash.typedconfig.keycombine;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.tree.DefaultExpressionEngine;
-import org.apache.commons.configuration.tree.ExpressionEngine;
-import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
+import org.apache.commons.configuration2.tree.ExpressionEngine;
+import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,8 @@ public class SmartDelimitedKeyCombinationStrategyTest {
     @Test
     public void shouldCombineForDefaultExpressionEngineDelimiter() throws Exception {
         DefaultExpressionEngine engine = mock(DefaultExpressionEngine.class);
-        when(engine.getPropertyDelimiter()).thenReturn("*");
+
+        when(engine.getSymbols().getPropertyDelimiter()).thenReturn("*");
         HierarchicalConfiguration config = mock(HierarchicalConfiguration.class);
         when(config.getExpressionEngine()).thenReturn(engine);
 

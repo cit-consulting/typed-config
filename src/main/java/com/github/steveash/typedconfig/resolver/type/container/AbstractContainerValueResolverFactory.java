@@ -18,8 +18,6 @@ package com.github.steveash.typedconfig.resolver.type.container;
 
 import com.google.common.base.Throwables;
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.Option;
@@ -27,6 +25,8 @@ import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.SubnodeConfiguration;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,7 +39,6 @@ import java.util.List;
  * @author Steve Ash
  */
 public abstract class AbstractContainerValueResolverFactory implements ValueResolverFactory {
-    @Override
     public ValueResolver makeForThis(final ConfigBinding containerBinding, final HierarchicalConfiguration config,
                                      final ConfigFactoryContext context) {
         return new ValueResolver() {
@@ -72,7 +71,7 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
                 Collection<Object> values = makeEmptyCollection(childConfigs.size());
                 for (HierarchicalConfiguration childConfig : childConfigs) {
                     SubnodeConfiguration childConfigAsSub = (SubnodeConfiguration) childConfig;
-                    ConfigBinding subBinding = childBinding.withKey(childConfigAsSub.getSubnodeKey());
+                    ConfigBinding subBinding = childBinding.withKey(childConfigAsSub.getRootElementName());
                     ValueResolver r = childFactory.makeForThis(subBinding, childConfig, context);
                     values.add(r.resolve());
                 }

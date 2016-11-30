@@ -15,7 +15,7 @@
  */
 package com.github.steveash.typedconfig.exception;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import com.github.steveash.typedconfig.ConfigurationPrinter;
 import com.github.steveash.typedconfig.Option;

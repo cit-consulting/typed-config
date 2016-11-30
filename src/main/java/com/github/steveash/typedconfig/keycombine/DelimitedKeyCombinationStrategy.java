@@ -16,8 +16,8 @@
 
 package com.github.steveash.typedconfig.keycombine;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Steve Ash
@@ -29,13 +29,13 @@ public abstract class DelimitedKeyCombinationStrategy implements KeyCombinationS
         String delim = getDelimiter();
         if (StringUtils.isBlank(baseKey))
             return localKey;
-        
+
         if (baseKey.endsWith(delim) && localKey.startsWith(delim))
             return baseKey + localKey.substring(1);
-        
+
         if (baseKey.endsWith(delim) || localKey.startsWith(delim))
             return baseKey + localKey;
-        
+
         return baseKey + delim + localKey;
     }
 

@@ -17,7 +17,7 @@
 package com.github.steveash.typedconfig.resolver;
 
 import com.google.common.eventbus.Subscribe;
-import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

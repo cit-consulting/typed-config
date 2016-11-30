@@ -16,13 +16,14 @@
 
 package com.github.steveash.typedconfig.keycombine;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * Strategy for how to combine the basekey specified in @ConfigProxy annotations with the @Config values and
  * defaultLookup values.  Note that this is really dependent on the particular expression engine.  The default
  * expression engine wants to combine things with dots (basekey.localkey) wheres the xpath engine probably
  * wants slashes (basekey/localkey)
+ *
  * @author Steve Ash
  */
 public interface KeyCombinationStrategy {

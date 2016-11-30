@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -16,9 +16,13 @@
 
 package com.github.steveash.typedconfig.resolver.type.container;
 
+import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.ConfigFactoryContext;
+import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.github.steveash.typedconfig.ConfigBinding;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.util.Collection;
 
@@ -34,6 +38,27 @@ public class ListValueResolverFactory extends AbstractContainerValueResolverFact
     @Override
     protected Object makeReturnValueFrom(Collection<Object> containedValues, ConfigBinding binding) {
         return ImmutableList.copyOf(containedValues);
+    }
+
+    @Override
+    public ValueResolver makeForThis(ConfigBinding binding, HierarchicalConfiguration config, ConfigFactoryContext context) {
+        return new ValueResolver() {
+            @Override
+            public Configuration resolve() {
+                return config;
+            }
+
+            @Override
+            public Configuration convertDefaultValue(String defaultValue) {
+                throw new IllegalStateException("should never happen as cant default the configuration node. cant " +
+                        "use configuration inside of a container type");
+            }
+
+            @Override
+            public String configurationKeyToLookup() {
+                return binding.getConfigKeyToLookup();
+            }
+        };
     }
 
     @Override
