@@ -126,27 +126,6 @@ public class MapValueResolverFactory extends AbstractContainerValueResolverFacto
     }
 
     @Override
-    public ValueResolver makeForThis(ConfigBinding binding, HierarchicalConfiguration config, ConfigFactoryContext context) {
-        return new ValueResolver() {
-            @Override
-            public Configuration resolve() {
-                return config;
-            }
-
-            @Override
-            public Configuration convertDefaultValue(String defaultValue) {
-                throw new IllegalStateException("should never happen as cant default the configuration node. cant " +
-                        "use configuration inside of a container type");
-            }
-
-            @Override
-            public String configurationKeyToLookup() {
-                return binding.getConfigKeyToLookup();
-            }
-        };
-    }
-
-    @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
         // since we wrap the map, and the immutable map can't be delegated to I have to return map
         return configBinding.getDataType().getRawType().isAssignableFrom(Map.class);

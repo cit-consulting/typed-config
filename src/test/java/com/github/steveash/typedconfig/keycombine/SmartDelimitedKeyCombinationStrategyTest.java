@@ -38,7 +38,11 @@ public class SmartDelimitedKeyCombinationStrategyTest {
     public void shouldCombineForDefaultExpressionEngineDelimiter() throws Exception {
         DefaultExpressionEngine engine = mock(DefaultExpressionEngine.class);
 
-        when(engine.getSymbols().getPropertyDelimiter()).thenReturn("*");
+        when(engine.getSymbols())
+                .thenReturn(new DefaultExpressionEngineSymbols
+                        .Builder()
+                        .setPropertyDelimiter("*")
+                        .create());
         HierarchicalConfiguration config = mock(HierarchicalConfiguration.class);
         when(config.getExpressionEngine()).thenReturn(engine);
 

@@ -25,6 +25,7 @@ import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
 
@@ -70,7 +71,7 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
                         config.configurationsAt(containerBinding.getConfigKeyToLookup());
                 Collection<Object> values = makeEmptyCollection(childConfigs.size());
                 for (HierarchicalConfiguration childConfig : childConfigs) {
-                    SubnodeConfiguration childConfigAsSub = (SubnodeConfiguration) childConfig;
+                    BaseHierarchicalConfiguration childConfigAsSub = (BaseHierarchicalConfiguration) childConfig;
                     ConfigBinding subBinding = childBinding.withKey(childConfigAsSub.getRootElementName());
                     ValueResolver r = childFactory.makeForThis(subBinding, childConfig, context);
                     values.add(r.resolve());
