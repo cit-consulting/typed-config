@@ -16,12 +16,6 @@
 
 package com.github.steveash.typedconfig.defaultvalue;
 
-import com.google.common.reflect.TypeToken;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.ConfigProxyFactoryTest;
@@ -29,16 +23,18 @@ import com.github.steveash.typedconfig.Option;
 import com.github.steveash.typedconfig.annotation.Config;
 import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import com.google.common.reflect.TypeToken;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.Arrays;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -85,18 +81,6 @@ public class DefaultValueStrategyTest {
         context = ConfigProxyFactoryTest.defaultContext;
     }
 
-    static interface Proxy {
-        String noAnnotation();
-        @Config(defaultValue = "heresADefault")
-        String withDefaultValue();
-        @Config(defaultLookup = "some.lookup")
-        String withDefaultLookup();
-        @Config(defaultLookup = "some.lookup.thats.missing", defaultValue = "the default default")
-        String withDefaultValueAndDefaultLookup();
-        @Config(defaultLookup = "some.lookup.thats.missing")
-        String withDefaultLookupThatsMissing();
-    }
-
     @Test
     public void shouldReturnGoodValueFromResolver() throws Exception {
         String result = (String) strategy.decorateForDefaults(good1Resolver, config, binding, context, Proxy.class,
@@ -117,7 +101,7 @@ public class DefaultValueStrategyTest {
     public void shouldDoDefaultLookupIfMissing() throws Exception {
         when(config.getString("some.lookup", null)).thenReturn("foundTheLookup");
         String result = (String) strategy.decorateForDefaults(badResolver, config, binding, context, Proxy.class,
-                        Proxy.class.getDeclaredMethod("withDefaultLookup")
+                Proxy.class.getDeclaredMethod("withDefaultLookup")
         ).resolve();
         assertEquals("foundTheLookup", result);
     }
@@ -125,7 +109,7 @@ public class DefaultValueStrategyTest {
     @Test
     public void shouldDoLookupAndRevertToGivenDefaultIfBothMissing() throws Exception {
         String result = (String) strategy.decorateForDefaults(badResolver, config, binding, context, Proxy.class,
-                        Proxy.class.getDeclaredMethod("withDefaultValueAndDefaultLookup")
+                Proxy.class.getDeclaredMethod("withDefaultValueAndDefaultLookup")
         ).resolve();
         assertEquals("the default default", result);
     }
@@ -133,7 +117,7 @@ public class DefaultValueStrategyTest {
     @Test
     public void shouldReturnNullIfNotRequired() throws Exception {
         String result = (String) strategy.decorateForDefaults(badResolver, config, binding, context, Proxy.class,
-                        Proxy.class.getDeclaredMethod("withDefaultLookupThatsMissing")
+                Proxy.class.getDeclaredMethod("withDefaultLookupThatsMissing")
         ).resolve();
         assertNull(result);
     }
@@ -143,7 +127,23 @@ public class DefaultValueStrategyTest {
         when(binding.getOptions()).thenReturn(Arrays.asList(Option.REQUIRED));
 
         String result = (String) strategy.decorateForDefaults(badResolver, config, binding, context, Proxy.class,
-                        Proxy.class.getDeclaredMethod("withDefaultLookupThatsMissing")).resolve();
+                Proxy.class.getDeclaredMethod("withDefaultLookupThatsMissing")).resolve();
         fail();
+    }
+
+    public interface Proxy {
+        String noAnnotation();
+
+        @Config(defaultValue = "heresADefault")
+        String withDefaultValue();
+
+        @Config(defaultLookup = "some.lookup")
+        String withDefaultLookup();
+
+        @Config(defaultLookup = "some.lookup.thats.missing", defaultValue = "the default default")
+        String withDefaultValueAndDefaultLookup();
+
+        @Config(defaultLookup = "some.lookup.thats.missing")
+        String withDefaultLookupThatsMissing();
     }
 }

@@ -16,17 +16,14 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.ConfigProxyFactory;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Steve Ash
@@ -35,12 +32,6 @@ public class ProxyValueResolverTest {
 
     private ConfigProxyFactory cpf;
     private HierarchicalConfiguration mock;
-
-    static interface Child {
-        int getSome1();
-
-        int getSome2();
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -92,5 +83,11 @@ public class ProxyValueResolverTest {
         when(mock.getInteger("some2", null)).thenReturn(23);
         Child c1 = cpf.make(Child.class, mock);
         assertEquals("Child[getSome1=42,getSome2=23]", c1.toString());
+    }
+
+    public interface Child {
+        int getSome1();
+
+        int getSome2();
     }
 }

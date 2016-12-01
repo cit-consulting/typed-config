@@ -16,13 +16,13 @@
 
 package com.github.steveash.typedconfig.validation;
 
+import com.github.steveash.typedconfig.exception.InvalidProxyException;
+import com.github.steveash.typedconfig.resolver.ValueResolver;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.junit.Before;
 import org.junit.Test;
-import com.github.steveash.typedconfig.exception.InvalidProxyException;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Pattern;
@@ -130,7 +130,7 @@ public class BeanValidatorValidationStrategyTest {
         fail();
     }
 
-    static interface MockProxy {
+    public interface MockProxy {
 
         @NotBlank
         String getIt1();

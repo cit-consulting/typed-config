@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 
 /**
  * Helps resolve annotations from config proxies w.r.t default values
+ *
  * @author Steve Ash
  */
 public class ConfigAnnotationResolver {
@@ -40,7 +41,7 @@ public class ConfigAnnotationResolver {
         }
     }
 
-    public ConfigProxy getConfigProxy(Class<?> interfaze) {
+    ConfigProxy getConfigProxy(Class<?> interfaze) {
         ConfigProxy configProxy = interfaze.getAnnotation(ConfigProxy.class);
         if (configProxy != null)
             return configProxy;

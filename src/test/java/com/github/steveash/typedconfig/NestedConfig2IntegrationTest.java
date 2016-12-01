@@ -16,13 +16,13 @@
 
 package com.github.steveash.typedconfig;
 
+import com.github.steveash.typedconfig.annotation.Config;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
 import org.junit.Test;
-import com.github.steveash.typedconfig.annotation.Config;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -36,26 +36,11 @@ public class NestedConfig2IntegrationTest {
 
     private Proxy proxy;
 
-    static interface Proxy {
-        int getA();
-
-        @Config("nested.b")
-        List<Integer> getBs();
-
-        List<Float> getC();
-
-        @NotEmpty // should fail
-        List<Integer> getD();
-
-        @NotEmpty // should not
-        List<Integer> getE();
-    }
-
     @Before
     public void setUp() throws Exception {
         proxy = ConfigProxyFactory.getDefault()
                 .make(Proxy.class, new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-                        .configure(new Parameters().properties().setFileName("nestedConfig2.xml")).getConfiguration());
+                        .configure(new Parameters().xml().setFileName("nestedConfig2.xml")).getConfiguration());
     }
 
     @Test
@@ -83,5 +68,22 @@ public class NestedConfig2IntegrationTest {
     public void shouldValidateGoodListItems() throws Exception {
         List<Integer> results = proxy.getE();
         assertEquals(3, results.size());
+    }
+
+    public interface Proxy {
+        int getA();
+
+        @Config("nested.b")
+        List<Integer> getBs();
+
+        List<Float> getC();
+
+        @NotEmpty
+            // should fail
+        List<Integer> getD();
+
+        @NotEmpty
+            // should not
+        List<Integer> getE();
     }
 }

@@ -16,11 +16,10 @@
 
 package com.github.steveash.typedconfig;
 
-import com.github.steveash.typedconfig.ConfigAnnotationResolver;
-import org.junit.Before;
-import org.junit.Test;
 import com.github.steveash.typedconfig.annotation.Config;
 import com.github.steveash.typedconfig.annotation.ConfigProxy;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 
@@ -46,6 +45,7 @@ public class ConfigAnnotationResolverTest {
         assertNotNull(result);
         assertEquals("", result.value());
     }
+
     @Test
     public void shouldReturnPresentConfigAnnotation() throws Exception {
         Method methodWithout = TestClassWithAnnotation.class.getDeclaredMethod("methodWith");
@@ -71,16 +71,17 @@ public class ConfigAnnotationResolverTest {
     @ConfigProxy(basekey = "some.prefix")
     public static class TestClassWithAnnotation {
         @Config("some.config.key")
-        public void methodWith() {
+        void methodWith() {
 
         }
-        public void methodWithout() {
+
+        void methodWithout() {
 
         }
     }
 
     // no ConfigProxy
-    public static class TestClassWithoutAnnotation {
+    private static class TestClassWithoutAnnotation {
 
     }
 }

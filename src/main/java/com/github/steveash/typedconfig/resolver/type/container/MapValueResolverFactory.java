@@ -16,8 +16,10 @@
 
 package com.github.steveash.typedconfig.resolver.type.container;
 
-import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
+import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.annotation.MapKey;
+import com.github.steveash.typedconfig.exception.InvalidProxyException;
+import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableMap;
@@ -25,12 +27,6 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.beanutils.BeanUtils;
-import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.annotation.MapKey;
-import com.github.steveash.typedconfig.exception.InvalidProxyException;
-import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -90,15 +86,17 @@ public class MapValueResolverFactory extends AbstractContainerValueResolverFacto
         }
 
         Map<Object, Object> map = builder.build();
-        if (mapKeyAnnotation.required())
-            map = new RequiredValueMap<Object, Object>(map, binding);
+        if (mapKeyAnnotation.required()) {
+            map = new RequiredValueMap<>(map, binding);
+        }
 
         return map;
     }
 
     private void throwIfInvalidValidType(TypeToken<?> keyType, Object keyValue, ConfigBinding binding) {
-        if (keyType.getRawType().isAssignableFrom(keyType.getRawType()))
+        if (keyType.getRawType().isAssignableFrom(keyType.getRawType())) {
             return;
+        }
         throw new InvalidProxyException("Trying to create the map for config key " + binding.getConfigKeyToLookup() +
                 " but the @MapKey refers to child property with a value " + keyValue + " which is not assignable to " +
                 "the key type which is " + keyType);

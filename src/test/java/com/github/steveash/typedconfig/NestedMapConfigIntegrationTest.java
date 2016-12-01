@@ -16,19 +16,18 @@
 
 package com.github.steveash.typedconfig;
 
+import com.github.steveash.typedconfig.annotation.Config;
+import com.github.steveash.typedconfig.annotation.MapKey;
+import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.junit.Before;
 import org.junit.Test;
-import com.github.steveash.typedconfig.annotation.Config;
-import com.github.steveash.typedconfig.annotation.MapKey;
-import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
 
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -39,34 +38,10 @@ public class NestedMapConfigIntegrationTest {
     private Proxy proxy;
     private XMLConfiguration xmlConfig;
 
-    static interface Proxy {
-        int getA();
-
-        @MapKey("name")
-        @Config("child")
-        Map<String, Child> getChildren();
-
-        @MapKey(value = "name", required = false)
-        @Config("child")
-        Map<String, Child> getChildrenOrNull();
-    }
-
-    static interface Address {
-        String getCity();
-
-        String getState();
-    }
-
-    static interface Child {
-        String getName();
-
-        Address getAddress();
-    }
-
     @Before
     public void setUp() throws Exception {
         xmlConfig = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-                .configure(new Parameters().properties().setFileName("nestedMapConfig.xml")).getConfiguration();
+                .configure(new Parameters().xml().setFileName("nestedMapConfig.xml")).getConfiguration();
         proxy = ConfigProxyFactory.getDefault()
                 .make(Proxy.class, xmlConfig);
     }
@@ -97,5 +72,29 @@ public class NestedMapConfigIntegrationTest {
         xmlConfig.setProperty("child(0).address.city", "Paris");
 
         assertEquals("Paris", proxy.getChildren().get("steve").getAddress().getCity());
+    }
+
+    public interface Proxy {
+        int getA();
+
+        @MapKey("name")
+        @Config("child")
+        Map<String, Child> getChildren();
+
+        @MapKey(value = "name", required = false)
+        @Config("child")
+        Map<String, Child> getChildrenOrNull();
+    }
+
+    public interface Address {
+        String getCity();
+
+        String getState();
+    }
+
+    public interface Child {
+        String getName();
+
+        Address getAddress();
     }
 }

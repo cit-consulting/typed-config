@@ -16,10 +16,10 @@
 
 package com.github.steveash.typedconfig.validation;
 
-import com.google.common.collect.Sets;
 import com.github.steveash.typedconfig.PropertyUtil;
 import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import com.google.common.collect.Sets;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -34,7 +34,7 @@ public class BeanValidatorValidationStrategy implements ValidationStrategy {
 
     private final Validator validator;
 
-    public BeanValidatorValidationStrategy(Validator validator) {
+    private BeanValidatorValidationStrategy(Validator validator) {
         this.validator = validator;
     }
 
@@ -80,19 +80,23 @@ public class BeanValidatorValidationStrategy implements ValidationStrategy {
     }
 
     private boolean isValidationAnnotation(Annotation a, Set<Annotation> checkedAnnotations) {
-        if (checkedAnnotations.contains(a))
+        if (checkedAnnotations.contains(a)) {
             return false;
+        }
         checkedAnnotations.add(a); // catch cycles
 
-        if (a.annotationType().getName().startsWith("java.lang"))
+        if (a.annotationType().getName().startsWith("java.lang")) {
             return false;
+        }
 
-        if (a.annotationType().getName().startsWith("javax.validation"))
+        if (a.annotationType().getName().startsWith("javax.validation")) {
             return true;
+        }
 
         for (Annotation nestedAnnotation : a.annotationType().getDeclaredAnnotations()) {
-            if (isValidationAnnotation(nestedAnnotation, checkedAnnotations))
+            if (isValidationAnnotation(nestedAnnotation, checkedAnnotations)) {
                 return true;
+            }
         }
         return false;
     }

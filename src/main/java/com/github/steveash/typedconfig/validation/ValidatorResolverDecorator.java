@@ -33,7 +33,7 @@ public class ValidatorResolverDecorator extends ForwardingValueResolver {
     private final String method;
     private final Validator validator;
 
-    public ValidatorResolverDecorator(ValueResolver delegate, Class clazz, String method, Validator validator) {
+    ValidatorResolverDecorator(ValueResolver delegate, Class clazz, String method, Validator validator) {
         super(delegate);
         this.clazz = clazz;
         this.method = method;

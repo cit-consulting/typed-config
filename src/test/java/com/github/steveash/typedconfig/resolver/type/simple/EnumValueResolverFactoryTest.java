@@ -16,18 +16,16 @@
 
 package com.github.steveash.typedconfig.resolver.type.simple;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.resolver.ValueResolver;
+import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
-import com.google.common.reflect.TypeToken;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Steve Ash
@@ -36,8 +34,6 @@ public class EnumValueResolverFactoryTest {
 
     private HierarchicalConfiguration mock;
     private ConfigBinding binding;
-
-    enum Color { RED, BLUE }
 
     @Before
     public void setUp() throws Exception {
@@ -69,4 +65,6 @@ public class EnumValueResolverFactoryTest {
         ValueResolver resolver = new EnumValueResolverFactory().makeForThis(binding, mock, null);
         resolver.resolve();
     }
+
+    enum Color {RED, BLUE}
 }

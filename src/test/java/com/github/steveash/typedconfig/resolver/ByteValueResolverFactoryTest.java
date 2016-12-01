@@ -1,10 +1,10 @@
 package com.github.steveash.typedconfig.resolver;
 
+import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.resolver.type.simple.ByteValueResolverFactory;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Test;
-import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.resolver.type.simple.ByteValueResolverFactory;
 
 import java.lang.reflect.Method;
 
@@ -21,7 +21,7 @@ public class ByteValueResolverFactoryTest {
     @Test
     public void shouldReturnBoxedPrimitiveValue() throws Exception {
         HierarchicalConfiguration mock = mock(HierarchicalConfiguration.class);
-        given(mock.getByte(eq("some.key"), (Byte)isNull())).willReturn((byte) 42);
+        given(mock.getByte(eq("some.key"), (Byte) isNull())).willReturn((byte) 42);
         ValueResolver resolver = new ByteValueResolverFactory()
                 .makeForThis(ConfigBinding.makeShimForKey("some.key"), mock, null);
 
@@ -45,8 +45,9 @@ public class ByteValueResolverFactoryTest {
         assertTrue(factory.canResolveFor(ConfigBinding.makeRootBinding(TypeToken.of(method.getGenericReturnType()))));
     }
 
-    static interface SampleClass {
+    public interface SampleClass {
         byte isPrimitiveReturn();
+
         Byte isBoxedReturn();
     }
 }

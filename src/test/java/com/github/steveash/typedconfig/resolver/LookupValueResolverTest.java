@@ -16,19 +16,18 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.Method;
-
+import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.Option;
+import com.github.steveash.typedconfig.annotation.Config;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.Option;
-import com.github.steveash.typedconfig.annotation.Config;
+import java.lang.reflect.Method;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Steve Ash
@@ -41,11 +40,6 @@ public class LookupValueResolverTest {
     private ConfigBinding nullBinding;
     private ConfigBinding oneBinding;
 
-    static interface TestIface {
-        @Config(options = Option.LOOKUP_RESULT)
-        String getSomething();
-    }
-
     @Before
     public void setUp() throws Exception {
         config = mock(HierarchicalConfiguration.class);
@@ -53,13 +47,7 @@ public class LookupValueResolverTest {
         when(config.getString("key.null", null)).thenReturn(null);
         method = TestIface.class.getDeclaredMethod("getSomething");
 
-        factory = new ValueResolverForBindingFactory() {
-            @Override
-            public ValueResolver makeResolverForBinding(ConfigBinding binding, Class<?> interfaze, Method method,
-                    HierarchicalConfiguration config) {
-                return new InstanceValueResolver(binding.getConfigKeyToLookup());
-            }
-        };
+        factory = (binding, interfaze, method, config) -> new InstanceValueResolver(binding.getConfigKeyToLookup());
 
         nullBinding = ConfigBinding.makeShimForKey("key.null").withOption(Option.LOOKUP_RESULT);
         oneBinding = ConfigBinding.makeShimForKey("key.one").withOption(Option.LOOKUP_RESULT);
@@ -92,5 +80,10 @@ public class LookupValueResolverTest {
         assertEquals("first", resolver.resolve());
         assertEquals(null, resolver.resolve());
         assertEquals("second", resolver.resolve());
+    }
+
+    public interface TestIface {
+        @Config(options = Option.LOOKUP_RESULT)
+        String getSomething();
     }
 }

@@ -1,14 +1,12 @@
 package com.github.steveash.typedconfig.resolver;
 
-import org.junit.Test;
 import com.github.steveash.typedconfig.ConfigBinding;
+import org.junit.Test;
 
 import java.util.Arrays;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -22,7 +20,7 @@ public class ValueResolverRegistryTest {
         ConfigBinding configBinding = ConfigBinding.makeShimForKey("");
         given(factory.canResolveFor(configBinding)).willReturn(true);
         ValueResolverRegistry registry = new ValueResolverRegistry(
-                Arrays.<ValueResolverFactory>asList(factory));
+                Arrays.asList(factory));
 
         assertNotNull(registry.lookup(configBinding));
     }
@@ -33,7 +31,7 @@ public class ValueResolverRegistryTest {
         ConfigBinding binding = mock(ConfigBinding.class);
         given(factory.canResolveFor(binding)).willReturn(false);
         ValueResolverRegistry registry = new ValueResolverRegistry(
-                        Arrays.<ValueResolverFactory>asList(factory));
+                Arrays.asList(factory));
 
         assertNotNull(registry.lookup(binding));
     }

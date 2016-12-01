@@ -31,6 +31,22 @@ import java.util.List;
 public class ConfigBinding {
 
     private static final List<Annotation> emptyAnns = ImmutableList.of();
+    private final TypeToken<?> dataType;
+    private final List<Option> options;
+    private final List<Annotation> annotations;
+    private final String configKeyToLookup;
+    /**
+     * @param configKeyToLookup
+     * @param dataType
+     * @param options
+     * @param anns
+     */
+    public ConfigBinding(String configKeyToLookup, TypeToken<?> dataType, List<Option> options, List<Annotation> anns) {
+        this.configKeyToLookup = configKeyToLookup;
+        this.dataType = dataType;
+        this.options = options;
+        annotations = anns;
+    }
 
     public static ConfigBinding makeRootBinding(TypeToken<?> dataType) {
         return new ConfigBinding("", dataType, Option.EmptyOptions, emptyAnns);
@@ -44,26 +60,8 @@ public class ConfigBinding {
         return new ConfigBinding(key, dataType, Option.EmptyOptions, emptyAnns);
     }
 
-    private final TypeToken<?> dataType;
-    private final List<Option> options;
-    private final List<Annotation> annotations;
-    private final String configKeyToLookup;
-
     public List<Annotation> getAnnotations() {
         return annotations;
-    }
-
-    /**
-     * @param configKeyToLookup
-     * @param dataType
-     * @param options
-     * @param anns
-     */
-    public ConfigBinding(String configKeyToLookup, TypeToken<?> dataType, List<Option> options, List<Annotation> anns) {
-        this.configKeyToLookup = configKeyToLookup;
-        this.dataType = dataType;
-        this.options = options;
-        annotations = anns;
     }
 
     public String getConfigKeyToLookup() {

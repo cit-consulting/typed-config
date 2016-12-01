@@ -16,17 +16,16 @@
 
 package com.github.steveash.typedconfig;
 
+import com.github.steveash.typedconfig.annotation.Config;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.junit.Before;
 import org.junit.Test;
-import com.github.steveash.typedconfig.annotation.Config;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Steve Ash
@@ -36,42 +35,15 @@ public class NestedConfig3ReloadIntegrationTest {
     private Proxy proxy;
     private XMLConfiguration xmlConfig;
 
-    static interface Proxy {
-        int getA();
-
-        NestedProxy getNestedType();
-
-        @Config("child")
-        List<Child> getChildren();
-    }
-
-    static interface NestedProxy {
-        int getB();
-
-        NestedNestedProxy getNestedNestedType();
-    }
-
-    static interface NestedNestedProxy {
-        int getC();
-    }
-
-    static interface Address {
-        String getCity();
-
-        String getState();
-    }
-
-    static interface Child {
-        String getName();
-
-        Address getAddress();
-    }
-
     @Before
     public void setUp() throws Exception {
         xmlConfig = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-                .configure(new Parameters().properties().setFileName("nestedConfig3.xml")).getConfiguration();
-        proxy = ConfigProxyFactory.getDefault()
+                .configure(new Parameters()
+                        .xml()
+                        .setFileName("nestedConfig3.xml"))
+                .getConfiguration();
+        proxy = ConfigProxyFactory
+                .getDefault()
                 .make(Proxy.class, xmlConfig);
     }
 
@@ -98,7 +70,6 @@ public class NestedConfig3ReloadIntegrationTest {
 
     @Test
     public void shouldUpdateReferencesToContainerSubnodes() throws Exception {
-
         Child firstChild = proxy.getChildren().get(0);
         Address firstAddress = firstChild.getAddress();
 
@@ -116,6 +87,7 @@ public class NestedConfig3ReloadIntegrationTest {
     public void shouldUpdateNestedTypeReferences() throws Exception {
         NestedProxy nestedType = proxy.getNestedType();
         NestedNestedProxy nestedNestedProxy = nestedType.getNestedNestedType();
+
         assertEquals(42, proxy.getA());
         assertEquals(123, nestedType.getB());
         assertEquals(456, nestedNestedProxy.getC());
@@ -127,5 +99,36 @@ public class NestedConfig3ReloadIntegrationTest {
         assertEquals(43, proxy.getA());
         assertEquals(987, nestedType.getB());
         assertEquals(654, nestedNestedProxy.getC());
+    }
+
+    public interface Proxy {
+        int getA();
+
+        NestedProxy getNestedType();
+
+        @Config("child")
+        List<Child> getChildren();
+    }
+
+    public interface NestedProxy {
+        int getB();
+
+        NestedNestedProxy getNestedNestedType();
+    }
+
+    public interface NestedNestedProxy {
+        int getC();
+    }
+
+    public interface Address {
+        String getCity();
+
+        String getState();
+    }
+
+    public interface Child {
+        String getName();
+
+        Address getAddress();
     }
 }

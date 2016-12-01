@@ -16,10 +16,10 @@
 
 package com.github.steveash.typedconfig.defaultvalue;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.junit.Test;
 import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

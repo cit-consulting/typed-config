@@ -16,8 +16,6 @@
 
 package com.github.steveash.typedconfig;
 
-import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.ConfigProxyFactory;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Test;
 
@@ -30,12 +28,11 @@ public class ConfigProxyFactoryTest {
 
     public static final ConfigFactoryContext defaultContext = ConfigProxyFactory.builder().buildContext();
 
-    static interface Proxy {
-
-    }
-
     @Test
     public void shouldBuildDefaultWithoutException() throws Exception {
         ConfigProxyFactory.getDefault().make(Proxy.class, mock(HierarchicalConfiguration.class));
+    }
+
+    public interface Proxy {
     }
 }

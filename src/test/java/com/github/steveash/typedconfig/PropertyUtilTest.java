@@ -16,7 +16,6 @@
 
 package com.github.steveash.typedconfig;
 
-import com.github.steveash.typedconfig.PropertyUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -26,16 +25,6 @@ import static org.junit.Assert.assertNull;
  * @author Steve Ash
  */
 public class PropertyUtilTest {
-
-    static interface Proxy {
-
-        String getSomething();
-        String getSomethingWithAParam(String cantDoThisInJavaBean);
-        String notAProperty();
-        boolean isSomething();
-        void setSomething(String param);
-        void setSomethingWithoutAParam();
-    }
 
     @Test
     public void testGetProperty() throws Exception {
@@ -49,5 +38,20 @@ public class PropertyUtilTest {
     public void testSetProperty() throws Exception {
         assertEquals("something", PropertyUtil.getPropertyName(Proxy.class.getDeclaredMethod("setSomething", String.class)));
         assertNull(PropertyUtil.getPropertyName(Proxy.class.getDeclaredMethod("setSomethingWithoutAParam")));
+    }
+
+    public interface Proxy {
+
+        String getSomething();
+
+        String getSomethingWithAParam(String cantDoThisInJavaBean);
+
+        String notAProperty();
+
+        boolean isSomething();
+
+        void setSomething(String param);
+
+        void setSomethingWithoutAParam();
     }
 }

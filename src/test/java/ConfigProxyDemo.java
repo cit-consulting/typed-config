@@ -25,7 +25,7 @@ public class ConfigProxyDemo {
     }
 
     @ConfigProxy
-    static interface CarConfiguration {
+    public interface CarConfiguration {
         @Config(value = "doors", defaultValue = "4")
         int getDoors();
 

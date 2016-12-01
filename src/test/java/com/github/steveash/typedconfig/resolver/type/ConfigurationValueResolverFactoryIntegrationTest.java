@@ -40,7 +40,7 @@ public class ConfigurationValueResolverFactoryIntegrationTest {
     @Before
     public void setUp() throws Exception {
         xmlConfig = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-                .configure(new Parameters().properties().setFileName("configIntegration.xml")).getConfiguration();
+                .configure(new Parameters().xml().setFileName("configIntegration.xml")).getConfiguration();
         proxy = ConfigProxyFactory.getDefault()
                 .make(Proxy.class, xmlConfig);
     }
@@ -49,9 +49,10 @@ public class ConfigurationValueResolverFactoryIntegrationTest {
     public void testConfiguration() throws Exception {
         assertEquals(42, proxy.getConfig().getInt("a"));
         assertEquals("steve", proxy.getChildren().get("steve").getConfig().getString("name"));
+        assertEquals("steve", proxy.getChildren().get("steve").getName());
     }
 
-    static interface Proxy {
+    public interface Proxy {
         int getA();
 
         HierarchicalConfiguration getConfig();
@@ -61,7 +62,7 @@ public class ConfigurationValueResolverFactoryIntegrationTest {
         Map<String, Child> getChildren();
     }
 
-    static interface Child {
+    public interface Child {
         String getName();
 
         HierarchicalConfiguration getConfig();

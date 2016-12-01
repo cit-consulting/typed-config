@@ -16,8 +16,6 @@
 
 package com.github.steveash.typedconfig.resolver.type.container;
 
-import com.google.common.base.Throwables;
-import com.google.common.reflect.TypeToken;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.Option;
@@ -25,9 +23,10 @@ import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import com.google.common.base.Throwables;
+import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -67,13 +66,13 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
             }
 
             private Object makeForNestedType(ConfigBinding childBinding, ValueResolverFactory childFactory) {
-                List<HierarchicalConfiguration> childConfigs =
+                List childConfigs =
                         config.configurationsAt(containerBinding.getConfigKeyToLookup());
                 Collection<Object> values = makeEmptyCollection(childConfigs.size());
-                for (HierarchicalConfiguration childConfig : childConfigs) {
+                for (Object childConfig : childConfigs) {
                     BaseHierarchicalConfiguration childConfigAsSub = (BaseHierarchicalConfiguration) childConfig;
                     ConfigBinding subBinding = childBinding.withKey(childConfigAsSub.getRootElementName());
-                    ValueResolver r = childFactory.makeForThis(subBinding, childConfig, context);
+                    ValueResolver r = childFactory.makeForThis(subBinding, (HierarchicalConfiguration) childConfig, context);
                     values.add(r.resolve());
                 }
                 return makeReturnValueFrom(values, containerBinding);
@@ -121,7 +120,6 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
     /**
      * If the type returned from #makeEmptyCollection is not the final return type, then implementors can transform
      * the values here and return whatever type they like (for example, immutableList might make a copy)
-     *
      *
      * @param containedValues
      * @param binding

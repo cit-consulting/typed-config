@@ -28,18 +28,19 @@ import static org.junit.Assert.assertEquals;
  */
 public class ToStringResolverTest {
 
-    static interface TestIface {
-        int getA();
-        String getB();
-    }
-
     @Test
     public void testResolve() throws Exception {
         ToStringResolver resolver = new ToStringResolver(TestIface.class,
                 ImmutableMap.<Method, ValueResolver>of(
-                TestIface.class.getDeclaredMethod("getA"), new InstanceValueResolver(42),
-                TestIface.class.getDeclaredMethod("getB"), new InstanceValueResolver("Steve")));
+                        TestIface.class.getDeclaredMethod("getA"), new InstanceValueResolver(42),
+                        TestIface.class.getDeclaredMethod("getB"), new InstanceValueResolver("Steve")));
 
         assertEquals("TestIface[getA=42,getB=Steve]", resolver.resolve());
+    }
+
+    public interface TestIface {
+        int getA();
+
+        String getB();
     }
 }

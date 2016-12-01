@@ -17,12 +17,8 @@
 package com.github.steveash.typedconfig.resolver.type.container;
 
 import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.util.Collection;
 

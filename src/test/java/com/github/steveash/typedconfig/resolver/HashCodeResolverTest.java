@@ -24,7 +24,6 @@ import org.junit.Test;
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Steve Ash
@@ -35,14 +34,6 @@ public class HashCodeResolverTest {
     private HashCodeResolver configA43;
     private HashCodeResolver configB42;
     private HashCodeResolver configB43;
-
-    static interface ConfigA {
-        int getA();
-    }
-
-    static interface ConfigB {
-        int getB();
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -74,5 +65,13 @@ public class HashCodeResolverTest {
     @Test
     public void shouldReturnANonZeroHashCode() throws Exception {
         assertEquals(-39006130, configA42.resolve());
+    }
+
+    public interface ConfigA {
+        int getA();
+    }
+
+    public interface ConfigB {
+        int getB();
     }
 }

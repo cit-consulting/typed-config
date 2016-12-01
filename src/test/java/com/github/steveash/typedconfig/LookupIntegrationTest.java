@@ -38,7 +38,7 @@ public class LookupIntegrationTest {
     public void setUp() throws Exception {
         proxy = ConfigProxyFactory.getDefault()
                 .make(House.class, new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-                        .configure(new Parameters().properties().setFileName("lookupIntegration.xml")).getConfiguration());
+                        .configure(new Parameters().xml().setFileName("lookupIntegration.xml")).getConfiguration());
     }
 
     @Test
@@ -48,11 +48,11 @@ public class LookupIntegrationTest {
         assertEquals("father", proxy.getHeadOfHouse().getTitle());
     }
 
-    static interface Person {
+    public interface Person {
         String getTitle();
     }
 
-    static interface House {
+    public interface House {
         @Config(options = Option.LOOKUP_RESULT)
         Person getHeadOfHouse();
 

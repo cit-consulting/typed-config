@@ -17,7 +17,6 @@
 package com.github.steveash.typedconfig;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
@@ -39,7 +38,8 @@ public class HierarchicalConfigurationSanityTest {
 
     @Before
     public void setUp() throws Exception {
-        config = new FileBasedConfigurationBuilder<>(XMLConfiguration.class).configure(new Parameters().properties().setFileName("nestedConfig1.xml")).getConfiguration();
+        config = new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
+                .configure(new Parameters().xml().setFileName("nestedConfig1.xml")).getConfiguration();
     }
 
     @Test
@@ -53,7 +53,7 @@ public class HierarchicalConfigurationSanityTest {
     @Test
     public void testDoubleNested() throws Exception {
         assertEquals(42, config.getInt("atParent"));
-        HierarchicalConfiguration nested =  config.configurationAt("doubleNested.nested");
+        HierarchicalConfiguration nested = config.configurationAt("doubleNested.nested");
         assertEquals("nested3", nested.getString("a"));
 //        assertEquals(42, nested.getParent().getInt("atParent"));
     }
@@ -70,5 +70,4 @@ public class HierarchicalConfigurationSanityTest {
         assertTrue(nestedConfig != null);
 //        assertEquals(42, nestedConfig.getParent().getInt("atParent"));
     }
-
 }
