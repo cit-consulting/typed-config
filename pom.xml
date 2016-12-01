@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2012 Jonathan Tyers, Steve Ash
+  ~ Copyright (c) 2016 Jonathan Tyers, Steve Ash, Dmitry Rudenko
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -197,31 +197,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>2.2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
             <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>release-argo</id>
-            <distributionManagement>
-                <repository>
-                    <id>argo</id>
-                    <name>Argo Repository</name>
-                    <url>http://serv107.argo.local/archiva/repository/argo</url>
-                    <layout>default</layout>
-                </repository>
-                <snapshotRepository>
-                    <id>argo.snapshots</id>
-                    <name>Argo Repository Snapshots</name>
-                    <url>http://serv107.argo.local/archiva/repository/argo.snapshots</url>
-                    <layout>default</layout>
-                </snapshotRepository>
-                <downloadUrl>http://serv107.argo.local/archiva/repository/com.argodata</downloadUrl>
-            </distributionManagement>
-        </profile>
-    </profiles>
 </project>
