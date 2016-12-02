@@ -43,8 +43,8 @@ public class ByteValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Byte.class) ||
-                configBinding.getDataType().isAssignableFrom(Byte.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Byte.class) ||
+                configBinding.getDataType().isSupertypeOf(Byte.TYPE)
                 ;
     }
 }

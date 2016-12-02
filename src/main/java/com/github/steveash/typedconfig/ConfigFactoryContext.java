@@ -92,6 +92,7 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
             case Nested:
                 Preconditions.checkNotNull(parentBinding);
                 // config points to the location of the nested context
+
                 HierarchicalConfiguration subConfig = config.configurationAt(newMethodBinding.getConfigKeyToLookup(), true);
                 ConfigBinding subBinding = newMethodBinding.withKey(subConfig.getRootElementName());
                 return factory.makeForThis(subBinding, subConfig, this);
@@ -163,8 +164,9 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
     }
 
     private String getLocalConfigKey(Method method, Config config) {
-        if (!config.value().equals(""))
+        if (!config.value().equals("")) {
             return config.value();
+        }
 
         if (PropertyUtil.isProperty(method)) {
             return Preconditions.checkNotNull(PropertyUtil.getPropertyName(method));
@@ -179,12 +181,12 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
 
     @Override
     public void onEvent(ConfigurationEvent event) {
-        if (event.isBeforeUpdate())
+        if (event.isBeforeUpdate()) {
             return;
+        }
 
 //        System.out.println("Received event: " + event.getType() + " for property name: " + event.getPropertyName() +
 //                        " -> " + event.getPropertyValue() + ", is before? " + event.isBeforeUpdate());
         eventBus.post(event);
     }
-
 }

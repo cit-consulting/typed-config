@@ -43,8 +43,8 @@ public class ShortValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Short.class) ||
-                configBinding.getDataType().isAssignableFrom(Short.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Short.class) ||
+                configBinding.getDataType().isSupertypeOf(Short.TYPE)
                 ;
     }
 }

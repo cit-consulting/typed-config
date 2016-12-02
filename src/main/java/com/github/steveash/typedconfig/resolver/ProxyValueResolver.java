@@ -158,9 +158,7 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
         return context.getCacheStrategy().decorateForCaching(resolver, hashBinding, context);
     }
 
-    private boolean proxyEquals(Class<?> thisIface, ImmutableMap<Method, ValueResolver> thisResolvers,
-                                Object that) {
-
+    private boolean proxyEquals(Class<?> thisIface, ImmutableMap<Method, ValueResolver> thisResolvers, Object that) {
         if (!(that instanceof ProxiedConfiguration)) {
             return false;
         }
@@ -183,7 +181,6 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
                 return false;
             }
         }
-
         return true;
     }
 }

@@ -27,6 +27,9 @@ import com.google.common.base.Throwables;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.SubnodeConfiguration;
+import org.apache.commons.configuration2.tree.NodeSelector;
+import org.apache.commons.configuration2.tree.TrackedNodeModel;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -66,11 +69,11 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
             }
 
             private Object makeForNestedType(ConfigBinding childBinding, ValueResolverFactory childFactory) {
-                List childConfigs =
-                        config.configurationsAt(containerBinding.getConfigKeyToLookup());
+
+                List childConfigs = config.configurationsAt(containerBinding.getConfigKeyToLookup());
                 Collection<Object> values = makeEmptyCollection(childConfigs.size());
                 for (Object childConfig : childConfigs) {
-                    BaseHierarchicalConfiguration childConfigAsSub = (BaseHierarchicalConfiguration) childConfig;
+                    BaseHierarchicalConfiguration childConfigAsSub = ((BaseHierarchicalConfiguration) childConfig);
                     ConfigBinding subBinding = childBinding.withKey(childConfigAsSub.getRootElementName());
                     ValueResolver r = childFactory.makeForThis(subBinding, (HierarchicalConfiguration) childConfig, context);
                     values.add(r.resolve());
@@ -84,9 +87,10 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
 
                 Collection<Object> containedValues = makeEmptyCollection(configValues.size());
                 for (Object o : configValues) {
-                    if (!(o instanceof String))
+                    if (!(o instanceof String)) {
                         throw new IllegalArgumentException("Can only use Configuration instances which return string " +
                                 "representations of the values which we will then convert. XMLConfiguration does this");
+                    }
 
                     containedValues.add(childResolver.convertDefaultValue((String) o));
                 }

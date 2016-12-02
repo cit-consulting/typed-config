@@ -71,6 +71,6 @@ public class EnumValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Enum.class);
+        return configBinding.getDataType().isSupertypeOf(Enum.class);
     }
 }

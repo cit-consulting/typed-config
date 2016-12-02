@@ -43,8 +43,8 @@ public class LongValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Long.class) ||
-                configBinding.getDataType().isAssignableFrom(Long.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Long.class) ||
+                configBinding.getDataType().isSupertypeOf(Long.TYPE)
                 ;
     }
 }

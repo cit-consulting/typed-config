@@ -47,8 +47,8 @@ public class IntegerValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Integer.class) ||
-                configBinding.getDataType().isAssignableFrom(Integer.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Integer.class) ||
+                configBinding.getDataType().isSupertypeOf(Integer.TYPE)
                 ;
     }
 }

@@ -43,8 +43,8 @@ public class FloatValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Float.class) ||
-                configBinding.getDataType().isAssignableFrom(Float.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Float.class) ||
+                configBinding.getDataType().isSupertypeOf(Float.TYPE)
                 ;
     }
 }

@@ -45,6 +45,6 @@ public class BigIntegerValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(BigInteger.class);
+        return configBinding.getDataType().isSupertypeOf(BigInteger.class);
     }
 }

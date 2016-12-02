@@ -45,6 +45,6 @@ public class BigDecimalValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(BigDecimal.class);
+        return configBinding.getDataType().isSupertypeOf(BigDecimal.class);
     }
 }

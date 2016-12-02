@@ -43,8 +43,8 @@ public class DoubleValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Double.class) ||
-                configBinding.getDataType().isAssignableFrom(Double.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Double.class) ||
+                configBinding.getDataType().isSupertypeOf(Double.TYPE)
                 ;
     }
 }

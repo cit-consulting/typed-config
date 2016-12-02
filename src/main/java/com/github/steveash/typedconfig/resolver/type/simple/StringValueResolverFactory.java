@@ -43,6 +43,6 @@ public class StringValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(String.class);
+        return configBinding.getDataType().isSupertypeOf(String.class);
     }
 }

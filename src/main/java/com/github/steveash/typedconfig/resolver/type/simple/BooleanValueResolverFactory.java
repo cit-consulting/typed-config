@@ -79,8 +79,8 @@ public class BooleanValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(Boolean.class) ||
-                configBinding.getDataType().isAssignableFrom(Boolean.TYPE)
+        return configBinding.getDataType().isSupertypeOf(Boolean.class) ||
+                configBinding.getDataType().isSupertypeOf(Boolean.TYPE)
                 ;
     }
 }

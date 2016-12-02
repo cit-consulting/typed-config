@@ -52,7 +52,7 @@ public class ConfigurationValueResolverFactory implements ValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isAssignableFrom(HierarchicalConfiguration.class);
+        return configBinding.getDataType().isSupertypeOf(HierarchicalConfiguration.class);
     }
 
     @Override
