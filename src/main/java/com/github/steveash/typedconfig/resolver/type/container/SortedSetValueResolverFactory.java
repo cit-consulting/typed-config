@@ -16,12 +16,8 @@
 
 package com.github.steveash.typedconfig.resolver.type.container;
 
-import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
-import com.google.common.collect.ImmutableSortedSet;
 import com.github.steveash.typedconfig.ConfigBinding;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
+import com.google.common.collect.ImmutableSortedSet;
 
 import java.util.Collection;
 import java.util.TreeSet;
@@ -32,7 +28,7 @@ import java.util.TreeSet;
 public class SortedSetValueResolverFactory extends AbstractContainerValueResolverFactory {
     @Override
     protected Collection<Object> makeEmptyCollection(int size) {
-        return new TreeSet<Object>();
+        return new TreeSet<>();
     }
 
     @Override

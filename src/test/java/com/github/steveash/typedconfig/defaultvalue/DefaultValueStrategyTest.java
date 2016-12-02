@@ -31,6 +31,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.junit.Assert.*;
@@ -124,9 +125,9 @@ public class DefaultValueStrategyTest {
 
     @Test(expected = RequiredConfigurationKeyNotPresentException.class)
     public void shouldThrowExceptionIfIsRequired() throws Exception {
-        when(binding.getOptions()).thenReturn(Arrays.asList(Option.REQUIRED));
+        when(binding.getOptions()).thenReturn(Collections.singletonList(Option.REQUIRED));
 
-        String result = (String) strategy.decorateForDefaults(badResolver, config, binding, context, Proxy.class,
+        strategy.decorateForDefaults(badResolver, config, binding, context, Proxy.class,
                 Proxy.class.getDeclaredMethod("withDefaultLookupThatsMissing")).resolve();
         fail();
     }

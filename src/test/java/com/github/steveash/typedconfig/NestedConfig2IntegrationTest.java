@@ -53,10 +53,10 @@ public class NestedConfig2IntegrationTest {
         assertEquals(103, (int) proxy.getBs().get(3));
 
         assertEquals(4, proxy.getC().size());
-        assertEquals(1.2, (float) proxy.getC().get(0), 0.01);
-        assertEquals(1.3, (float) proxy.getC().get(1), 0.01);
-        assertEquals(1.4, (float) proxy.getC().get(2), 0.01);
-        assertEquals(1.5, (float) proxy.getC().get(3), 0.01);
+        assertEquals(1.2, proxy.getC().get(0), 0.01);
+        assertEquals(1.3, proxy.getC().get(1), 0.01);
+        assertEquals(1.4, proxy.getC().get(2), 0.01);
+        assertEquals(1.5, proxy.getC().get(3), 0.01);
     }
 
     @Test(expected = ConstraintViolationException.class)

@@ -72,16 +72,13 @@ public class ConfigAnnotationResolverTest {
     public static class TestClassWithAnnotation {
         @Config("some.config.key")
         void methodWith() {
-
         }
 
         void methodWithout() {
-
         }
     }
 
     // no ConfigProxy
     private static class TestClassWithoutAnnotation {
-
     }
 }

@@ -38,8 +38,9 @@ public class RequiredValueResolverDecorator extends ForwardingValueResolver {
     @Override
     public Object resolve() {
         Object o = delegate.resolve();
-        if (o != null)
+        if (o != null) {
             return o;
+        }
 
         throw RequiredConfigurationKeyNotPresentException.makeForMissingKey(delegate.configurationKeyToLookup(),
                 config);

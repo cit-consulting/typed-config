@@ -31,7 +31,7 @@ public class ToStringResolverTest {
     @Test
     public void testResolve() throws Exception {
         ToStringResolver resolver = new ToStringResolver(TestIface.class,
-                ImmutableMap.<Method, ValueResolver>of(
+                ImmutableMap.of(
                         TestIface.class.getDeclaredMethod("getA"), new InstanceValueResolver(42),
                         TestIface.class.getDeclaredMethod("getB"), new InstanceValueResolver("Steve")));
 
