@@ -17,15 +17,12 @@
 package com.github.steveash.typedconfig.resolver.type.simple;
 
 
-
-
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ConvertableValueResolver;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.ImmutableConfiguration;
 
 /**
  * @author Steve Ash
@@ -34,13 +31,15 @@ public class IntegerValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                              ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Integer.class, key) {
+            private final Object cacheValue = config.getInteger(key, null);
+
             @Override
             public Integer resolve() {
-                return config.getInteger(binding.getConfigKeyToLookup(), null);
+                return (Integer) cacheValue;
             }
         };
     }
@@ -48,7 +47,6 @@ public class IntegerValueResolverFactory extends SimpleValueResolverFactory {
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
         return configBinding.getDataType().isSupertypeOf(Integer.class) ||
-                configBinding.getDataType().isSupertypeOf(Integer.TYPE)
-                ;
+                configBinding.getDataType().isSupertypeOf(Integer.TYPE);
     }
 }

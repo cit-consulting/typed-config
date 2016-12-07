@@ -27,9 +27,6 @@ import com.google.common.base.Throwables;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
-import org.apache.commons.configuration2.tree.NodeSelector;
-import org.apache.commons.configuration2.tree.TrackedNodeModel;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -45,8 +42,13 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
     public ValueResolver makeForThis(final ConfigBinding containerBinding, final HierarchicalConfiguration config,
                                      final ConfigFactoryContext context) {
         return new ValueResolver() {
+            private Object cacheValue = resolve();
+
             @Override
             public Object resolve() {
+                if (cacheValue != null) {
+                    return cacheValue;
+                }
                 TypeToken<?> thisType = getContainedType(containerBinding.getDataType());
                 ConfigBinding childBinding = containerBinding
                         .withKey("")

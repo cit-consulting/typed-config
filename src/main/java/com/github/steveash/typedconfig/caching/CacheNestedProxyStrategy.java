@@ -32,8 +32,9 @@ public class CacheNestedProxyStrategy implements CacheStrategy {
     @Override
     public ValueResolver decorateForCaching(ValueResolver resolver, ConfigBinding binding, ConfigFactoryContext context) {
         ValueType valueType = context.getValueTypeForBinding(binding);
-        if (valueType != ValueType.Nested)
+        if (valueType != ValueType.Nested) {
             return resolver; // only wrap nested types
+        }
 
         CachingValueResolver cachingResolver = new CachingValueResolver(resolver);
         context.getEventBus().register(cachingResolver);

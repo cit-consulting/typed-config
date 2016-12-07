@@ -16,22 +16,22 @@
 
 package com.github.steveash.typedconfig.resolver.type;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ProxyValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * @author Steve Ash
  */
 public class ProxyValueResolverFactory implements ValueResolverFactory {
     @Override
-    public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
+    public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration parent,
                                      final ConfigFactoryContext context) {
-        return new ProxyValueResolver(binding, config, context);
+        return new ProxyValueResolver(binding, parent, context);
     }
 
     @Override

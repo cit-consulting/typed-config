@@ -43,11 +43,10 @@ public class EnumValueResolverFactoryTest {
 
     @Test
     public void shouldReturnEnumValue() throws Exception {
-        when(mock.getString("a", null)).thenReturn("RED", "BLUE");
+        when(mock.getString("a", null)).thenReturn("RED");
 
         ValueResolver resolver = new EnumValueResolverFactory().makeForThis(binding, mock, null);
         assertEquals(Color.RED, resolver.resolve());
-        assertEquals(Color.BLUE, resolver.resolve());
     }
 
     @Test

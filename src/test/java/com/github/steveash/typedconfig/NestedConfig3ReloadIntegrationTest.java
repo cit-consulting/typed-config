@@ -42,6 +42,7 @@ public class NestedConfig3ReloadIntegrationTest {
                         .xml()
                         .setFileName("nestedConfig3.xml"))
                 .getConfiguration();
+
         proxy = ConfigProxyFactory
                 .getDefault()
                 .make(Proxy.class, xmlConfig);
@@ -63,7 +64,7 @@ public class NestedConfig3ReloadIntegrationTest {
         assertEquals("steve", proxy.getChildren().get(0).getName());
         assertEquals("bob", proxy.getChildren().get(1).getName());
         assertEquals("Memphis", proxy.getChildren().get(0).getAddress().getCity());
-        assertEquals("Nashville", proxy.getChildren().get(1).getAddress().getCity());
+        assertEquals("Dallas", proxy.getChildren().get(1).getAddress().getCity());
         assertEquals("TN", proxy.getChildren().get(0).getAddress().getState());
         assertEquals("TX", proxy.getChildren().get(1).getAddress().getState());
     }
@@ -71,16 +72,18 @@ public class NestedConfig3ReloadIntegrationTest {
     @Test
     public void shouldUpdateReferencesToContainerSubnodes() throws Exception {
         Child firstChild = proxy.getChildren().get(0);
-        Address firstAddress = firstChild.getAddress();
 
-        assertEquals("steve", firstChild.getName());
-        assertEquals("Memphis", firstAddress.getCity());
+        assertEquals("steve", proxy.getChildren().get(0).getName());
+        assertEquals("Memphis", proxy.getChildren().get(0).getAddress().getCity());
 
         xmlConfig.setProperty("child(0).name", "bubba");
         xmlConfig.setProperty("child(0).address.city", "Nashville");
 
-        assertEquals("bubba", firstChild.getName());
-        assertEquals("Nashville", firstAddress.getCity());
+        assertEquals("steve", firstChild.getName());
+        assertEquals("Memphis", firstChild.getAddress().getCity());
+
+        assertEquals("steve", proxy.getChildren().get(0).getName());
+        assertEquals("Memphis", proxy.getChildren().get(0).getAddress().getCity());
     }
 
     @Test
@@ -89,27 +92,38 @@ public class NestedConfig3ReloadIntegrationTest {
         NestedNestedProxy nestedNestedProxy = nestedType.getNestedNestedType();
 
         assertEquals(42, proxy.getA());
+        assertEquals(Color.RED, proxy.getColor());
         assertEquals(123, nestedType.getB());
         assertEquals(456, nestedNestedProxy.getC());
+
+        assertEquals(123, proxy.getNestedType().getB());
+        assertEquals(456, proxy.getNestedType().getNestedNestedType().getC());
 
         xmlConfig.setProperty("a", 43);
         xmlConfig.setProperty("nestedType.b", 987);
         xmlConfig.setProperty("nestedType.nestedNestedType.c", 654);
 
-        assertEquals(43, proxy.getA());
-        assertEquals(987, nestedType.getB());
-        assertEquals(654, nestedNestedProxy.getC());
+        assertEquals(42, proxy.getA());
+        assertEquals(123, nestedType.getB());
+        assertEquals(456, nestedNestedProxy.getC());
+
+        assertEquals(42, proxy.getA());
+        assertEquals(123, proxy.getNestedType().getB());
+        assertEquals(456, proxy.getNestedType().getNestedNestedType().getC());
     }
 
     public interface Proxy {
         int getA();
-
+        Color getColor();
         NestedProxy getNestedType();
 
         @Config("child")
         List<Child> getChildren();
     }
 
+    public enum Color{
+        RED,BLACK
+    }
     public interface NestedProxy {
         int getB();
 

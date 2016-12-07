@@ -36,8 +36,9 @@ public class CachingValueResolver extends ForwardingValueResolver {
 
     @Override
     public Object resolve() {
-        if (isValueInitialized) // volatile read first
+        if (isValueInitialized) { // volatile read first
             return cachedValue;
+        }
 
         cachedValue = super.resolve();
         isValueInitialized = true; // volatile write last

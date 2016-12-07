@@ -71,7 +71,7 @@ public class NestedMapConfigIntegrationTest {
 
         xmlConfig.setProperty("child(0).address.city", "Paris");
 
-        assertEquals("Paris", proxy.getChildren().get("steve").getAddress().getCity());
+        assertEquals("Memphis", proxy.getChildren().get("steve").getAddress().getCity());
     }
 
     public interface Proxy {

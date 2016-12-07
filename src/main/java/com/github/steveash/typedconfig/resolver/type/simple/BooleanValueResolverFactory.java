@@ -16,13 +16,13 @@
 
 package com.github.steveash.typedconfig.resolver.type.simple;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.Option;
 import com.github.steveash.typedconfig.resolver.ConvertableValueResolver;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * @author Steve Ash
@@ -31,7 +31,7 @@ public class BooleanValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                              ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
         if (binding.getOptions().contains(Option.CHECK_KEY_EXISTS)) {
             return makeJustCheckKeyExistsResolver(binding.getConfigKeyToLookup(), config);
         }
@@ -39,7 +39,7 @@ public class BooleanValueResolverFactory extends SimpleValueResolverFactory {
     }
 
     private ValueResolver makeJustCheckKeyExistsResolver(final String configKeyToLookup,
-                                                                  final HierarchicalConfiguration config) {
+                                                         final HierarchicalConfiguration config) {
         return new ValueResolver() {
             @Override
             public Boolean resolve() {
@@ -68,11 +68,13 @@ public class BooleanValueResolverFactory extends SimpleValueResolverFactory {
     }
 
     private ConvertableValueResolver makeNormalBooleanResolver(final String key,
-                                                                        final HierarchicalConfiguration config) {
+                                                               final HierarchicalConfiguration config) {
         return new ConvertableValueResolver(Boolean.class, key) {
+            private final Object cacheValue = config.getBoolean(key, null);
+
             @Override
             public Boolean resolve() {
-                return config.getBoolean(key, null);
+                return (Boolean) cacheValue;
             }
         };
     }
@@ -80,7 +82,6 @@ public class BooleanValueResolverFactory extends SimpleValueResolverFactory {
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
         return configBinding.getDataType().isSupertypeOf(Boolean.class) ||
-                configBinding.getDataType().isSupertypeOf(Boolean.TYPE)
-                ;
+                configBinding.getDataType().isSupertypeOf(Boolean.TYPE);
     }
 }

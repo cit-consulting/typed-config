@@ -34,9 +34,10 @@ public class LongValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Long.class, key) {
+            private final Object cacheValue = config.getLong(key, null);
             @Override
             public Long resolve() {
-                return config.getLong(binding.getConfigKeyToLookup(), null);
+                return (Long) cacheValue;
             }
         };
     }

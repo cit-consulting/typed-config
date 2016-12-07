@@ -92,8 +92,8 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
                                                 HierarchicalConfiguration config) {
         ValueResolver resolver = context.makeResolverForBinding(config, binding, parentBinding);
 
-        resolver = context.getDefaultStrategy().decorateForDefaults(
-                resolver, config, binding, context, interfaze, method);
+        resolver = context.getDefaultStrategy()
+                .decorateForDefaults(resolver, config, binding, context, interfaze, method);
         resolver = context.getValidationStrategy().decorateForValidation(resolver, interfaze, method);
         resolver = context.getCacheStrategy().decorateForCaching(resolver, binding, context);
 
@@ -115,7 +115,7 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
                 return valueResolver.resolve();
             }
             if (equalsMethod.equals(method)) {
-                return proxyEquals(interfaze, propertyResolvers, args[0]);
+                return ProxyValueResolver.this.proxyEquals(interfaze, propertyResolvers, args[0]);
             }
 
             throw new IllegalStateException("no method is known for " + method);

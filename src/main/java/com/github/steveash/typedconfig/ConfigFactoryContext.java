@@ -93,7 +93,7 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
                 Preconditions.checkNotNull(parentBinding);
                 // config points to the location of the nested context
 
-                HierarchicalConfiguration subConfig = config.configurationAt(newMethodBinding.getConfigKeyToLookup(), true);
+                HierarchicalConfiguration subConfig = config.configurationAt(newMethodBinding.getConfigKeyToLookup());
                 ConfigBinding subBinding = newMethodBinding.withKey(subConfig.getRootElementName());
                 return factory.makeForThis(subBinding, subConfig, this);
 

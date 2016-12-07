@@ -13,7 +13,7 @@ public class ConfigProxyDemo {
     public static void main(final String[] args) throws ConfigurationException {
         CarConfiguration configuration = ConfigProxyFactory.getDefault()
                 .make(CarConfiguration.class, (HierarchicalConfiguration) new FileBasedConfigurationBuilder<>(XMLConfiguration.class)
-                        .configure(new Parameters().properties()
+                        .configure(new Parameters().xml()
                                 .setFileName("car.xml")));
 
         System.out.println("Building a '" + configuration.getName() +

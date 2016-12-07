@@ -16,12 +16,12 @@
 
 package com.github.steveash.typedconfig.resolver.type.simple;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ConvertableValueResolver;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * @author Steve Ash
@@ -30,13 +30,14 @@ public class DoubleValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                             ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Double.class, key) {
+            private final Object cacheValue = config.getDouble(key, null);
             @Override
             public Double resolve() {
-                return config.getDouble(binding.getConfigKeyToLookup(), null);
+                return (Double) cacheValue;
             }
         };
     }
@@ -44,7 +45,6 @@ public class DoubleValueResolverFactory extends SimpleValueResolverFactory {
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
         return configBinding.getDataType().isSupertypeOf(Double.class) ||
-                configBinding.getDataType().isSupertypeOf(Double.TYPE)
-                ;
+                configBinding.getDataType().isSupertypeOf(Double.TYPE);
     }
 }

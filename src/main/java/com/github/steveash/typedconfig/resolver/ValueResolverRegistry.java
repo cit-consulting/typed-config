@@ -70,7 +70,7 @@ public class ValueResolverRegistry {
     }
 
     public ValueResolverRegistry() {
-        this(ImmutableList.<ValueResolverFactory>of());
+        this(ImmutableList.of());
     }
 
     public ValueResolverRegistry(Iterable<? extends ValueResolverFactory> factories) {

@@ -16,15 +16,12 @@
 
 package com.github.steveash.typedconfig.resolver.type.simple;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.lang3.StringUtils;
-
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.resolver.ConvertableValueResolver;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
-import com.google.common.base.Throwables;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Steve Ash
@@ -33,18 +30,17 @@ public class EnumValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                             ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
 
         final Class enumType = binding.getDataType().getRawType();
         final String key = binding.getConfigKeyToLookup();
         return new ValueResolver() {
+            private final Object cacheValue = StringUtils.isBlank(config.getString(key, null))
+                    ? null : resolveEnumInstance(config.getString(key, null));
+
             @Override
             public Object resolve() {
-                String enumLabel = config.getString(binding.getConfigKeyToLookup(), null);
-                if (StringUtils.isBlank(enumLabel))
-                    return null;
-
-                return resolveEnumInstance(enumLabel);
+                return cacheValue;
             }
 
             private Object resolveEnumInstance(String enumLabel) {
@@ -52,8 +48,8 @@ public class EnumValueResolverFactory extends SimpleValueResolverFactory {
                     return Enum.valueOf(enumType, enumLabel);
                 } catch (IllegalArgumentException e) {
                     throw new IllegalArgumentException("The value of the configuration key " + key + " is " +
-                                                       enumLabel + " which is not a member of the enum " +
-                                                       enumType.getName(), e);
+                            enumLabel + " which is not a member of the enum " +
+                            enumType.getName(), e);
                 }
             }
 
@@ -71,6 +67,7 @@ public class EnumValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public boolean canResolveFor(ConfigBinding configBinding) {
-        return configBinding.getDataType().isSupertypeOf(Enum.class);
+        return configBinding.getDataType().getType() instanceof Class &&
+                Enum.class.equals(((Class) configBinding.getDataType().getType()).getSuperclass());
     }
 }

@@ -34,9 +34,10 @@ public class ByteValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Byte.class, key) {
+            private final Object cacheValue = config.getByte(key, null);
             @Override
             public Byte resolve() {
-                return config.getByte(binding.getConfigKeyToLookup(), null);
+                return (Byte) cacheValue;
             }
         };
     }

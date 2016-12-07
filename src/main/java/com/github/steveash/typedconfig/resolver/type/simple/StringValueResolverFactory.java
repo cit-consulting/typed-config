@@ -34,9 +34,10 @@ public class StringValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(String.class, key) {
+            private final Object cacheValue = config.getString(key, null);
             @Override
             public String resolve() {
-                return config.getString(binding.getConfigKeyToLookup(), null);
+                return (String) cacheValue;
             }
         };
     }

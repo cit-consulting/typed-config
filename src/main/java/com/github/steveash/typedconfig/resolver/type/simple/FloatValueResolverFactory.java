@@ -34,9 +34,10 @@ public class FloatValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Float.class, key) {
+            private final Object cacheValue = config.getFloat(key, null);
             @Override
             public Float resolve() {
-                return config.getFloat(binding.getConfigKeyToLookup(), null);
+                return (Float) cacheValue;
             }
         };
     }
