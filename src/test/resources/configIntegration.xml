@@ -14,14 +14,14 @@
   ~ limitations under the License.
   -->
 <config>
-  <a>42</a>
-  <child>
-    <name>steve</name>
-  </child>
-  <child>
-    <name>bob</name>
-  </child>
-  <child>
-    <name>jim</name>
-  </child>
+    <a>42</a>
+    <child>
+        <name>steve</name>
+    </child>
+    <child>
+        <name>bob</name>
+    </child>
+    <child>
+        <name>jim</name>
+    </child>
 </config>

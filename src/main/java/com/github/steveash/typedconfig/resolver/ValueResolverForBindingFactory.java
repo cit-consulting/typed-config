@@ -16,19 +16,19 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import java.lang.reflect.Method;
-
+import com.github.steveash.typedconfig.ConfigBinding;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 
-import com.github.steveash.typedconfig.ConfigBinding;
+import java.lang.reflect.Method;
 
 /**
  * Simple abstraction for any thing that can return value resolvers for bindings; this is mainly here just as a
  * marker for the ValueProxyResolver (to reduce coupling in the lookupResolver)
+ *
  * @author Steve Ash
  */
 interface ValueResolverForBindingFactory {
 
     ValueResolver makeResolverForBinding(ConfigBinding binding, Class<?> interfaze, Method method,
-            HierarchicalConfiguration config);
+                                         HierarchicalConfiguration config);
 }

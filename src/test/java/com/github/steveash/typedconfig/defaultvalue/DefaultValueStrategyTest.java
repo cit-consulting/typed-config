@@ -30,7 +30,6 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;

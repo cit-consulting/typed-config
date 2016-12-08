@@ -16,13 +16,13 @@
 
 package com.github.steveash.typedconfig.resolver.type;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * @author Steve Ash
@@ -30,7 +30,7 @@ import com.github.steveash.typedconfig.resolver.ValueType;
 public class ConfigurationValueResolverFactory implements ValueResolverFactory {
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                                    ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
         return new ValueResolver() {
             @Override
             public Configuration resolve() {

@@ -15,7 +15,7 @@
   -->
 <config>
     <a>42</a>
-
+    <color>RED</color>
     <nestedType>
         <b>123</b>
         <nestedNestedType>

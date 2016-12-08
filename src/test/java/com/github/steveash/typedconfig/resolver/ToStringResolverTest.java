@@ -19,8 +19,6 @@ package com.github.steveash.typedconfig.resolver;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
-
 import static org.junit.Assert.assertEquals;
 
 /**

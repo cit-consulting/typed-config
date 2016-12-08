@@ -15,13 +15,13 @@
  */
 package com.github.steveash.typedconfig.annotation;
 
+import com.github.steveash.typedconfig.Option;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import com.github.steveash.typedconfig.Option;
 
 /**
  * For a class annotated with {@code @}{@link ConfigProxy}, maps a method to a key in an {@link HierarchicalConfiguration Apache Commons
@@ -40,35 +40,35 @@ import com.github.steveash.typedconfig.Option;
  * <li>String</li>
  * <li>List</li>
  * </ul>
- * 
+ *
  * @author jonny
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Config {
 
-	/**
-	 * The name of the configuration key this configuration value maps to. This will be relative to the <tt>basekey</tt> in the enclosing class
-	 * {@link ConfigProxy} annotation, if set.  If the key is not specified then the name of the method will be used
+    /**
+     * The name of the configuration key this configuration value maps to. This will be relative to the <tt>basekey</tt> in the enclosing class
+     * {@link ConfigProxy} annotation, if set.  If the key is not specified then the name of the method will be used
      * (stripping any prefixing get/is per the javabean specification).  A method called getMyProperty will search
      * the configuration for key "myProperty"
-	 */
-	String value() default "";
+     */
+    String value() default "";
 
-	/**
-	 * If defaultKey is specified, the value for that key will be used if the key for this configuration value has no value.
-	 */
-	String defaultLookup() default "";
+    /**
+     * If defaultKey is specified, the value for that key will be used if the key for this configuration value has no value.
+     */
+    String defaultLookup() default "";
 
-	/**
-	 * If defaultValue is specified, that value will be used if the key for this configuration value has no value. (The default value will undergo
-	 * conversion and validation as normal.)
-	 */
-	String defaultValue() default "";
+    /**
+     * If defaultValue is specified, that value will be used if the key for this configuration value has no value. (The default value will undergo
+     * conversion and validation as normal.)
+     */
+    String defaultValue() default "";
 
-	/**
-	 * Additional options for configuration values
-	 */
-	Option[] options() default {Option.REQUIRED};
+    /**
+     * Additional options for configuration values
+     */
+    Option[] options() default {Option.REQUIRED};
 
 }

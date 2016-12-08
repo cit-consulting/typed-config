@@ -20,6 +20,7 @@ import org.apache.commons.beanutils.ConvertUtilsBean;
 
 /**
  * Base class that provides support for default value conversion for anything that supports it
+ *
  * @author Steve Ash
  */
 public abstract class ConvertableValueResolver implements ValueResolver {

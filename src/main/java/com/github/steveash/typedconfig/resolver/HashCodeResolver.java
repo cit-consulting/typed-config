@@ -17,7 +17,6 @@
 package com.github.steveash.typedconfig.resolver;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.lang.reflect.Method;

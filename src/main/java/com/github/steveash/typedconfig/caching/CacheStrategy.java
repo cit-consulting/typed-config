@@ -22,6 +22,7 @@ import com.github.steveash.typedconfig.resolver.ValueResolver;
 
 /**
  * The strategy for caching values from the configuration
+ *
  * @author Steve Ash
  */
 public interface CacheStrategy {

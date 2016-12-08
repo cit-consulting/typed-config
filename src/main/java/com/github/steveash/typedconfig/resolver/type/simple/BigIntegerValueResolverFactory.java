@@ -16,12 +16,12 @@
 
 package com.github.steveash.typedconfig.resolver.type.simple;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ConvertableValueResolver;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.math.BigInteger;
 
@@ -32,7 +32,7 @@ public class BigIntegerValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                                 ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(BigInteger.class, key) {

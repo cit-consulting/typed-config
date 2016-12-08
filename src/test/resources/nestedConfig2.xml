@@ -14,22 +14,22 @@
   ~ limitations under the License.
   -->
 <config>
-  <a>42</a>
-  <nested>
-    <b>100</b>
-    <b>101</b>
-    <b>102</b>
-    <b>103</b>
-  </nested>
+    <a>42</a>
+    <nested>
+        <b>100</b>
+        <b>101</b>
+        <b>102</b>
+        <b>103</b>
+    </nested>
 
-  <c>1.2</c>
-  <c>1.3</c>
-  <c>1.4</c>
-  <c>1.5</c>
+    <c>1.2</c>
+    <c>1.3</c>
+    <c>1.4</c>
+    <c>1.5</c>
 
-  <!-- no d elements to test validation -->
+    <!-- no d elements to test validation -->
 
-  <e>50</e>
-  <e>70</e>
-  <e>60</e>
+    <e>50</e>
+    <e>70</e>
+    <e>60</e>
 </config>

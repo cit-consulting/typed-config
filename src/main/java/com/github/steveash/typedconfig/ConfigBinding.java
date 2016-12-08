@@ -35,6 +35,7 @@ public class ConfigBinding {
     private final List<Option> options;
     private final List<Annotation> annotations;
     private final String configKeyToLookup;
+
     /**
      * @param configKeyToLookup
      * @param dataType

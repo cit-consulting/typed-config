@@ -35,6 +35,7 @@ public class DoubleValueResolverFactory extends SimpleValueResolverFactory {
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Double.class, key) {
             private final Object cacheValue = config.getDouble(key, null);
+
             @Override
             public Double resolve() {
                 return (Double) cacheValue;

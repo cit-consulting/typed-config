@@ -17,13 +17,13 @@ package com.github.steveash.typedconfig.exception;
 
 /**
  * Thrown by methods on a ConfigProxy when the value returned by a method would fail validation.
- * 
+ *
  * @author jonny
  */
 public class InvalidConfigurationValueException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public InvalidConfigurationValueException(final String message) {
-		super(message);
-	}
+    public InvalidConfigurationValueException(final String message) {
+        super(message);
+    }
 }

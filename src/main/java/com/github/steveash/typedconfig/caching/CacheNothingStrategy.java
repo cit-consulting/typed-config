@@ -22,6 +22,7 @@ import com.github.steveash.typedconfig.resolver.ValueResolver;
 
 /**
  * Strategy that caches nothing -- everything is read live from cache
+ *
  * @author Steve Ash
  */
 public class CacheNothingStrategy implements CacheStrategy {

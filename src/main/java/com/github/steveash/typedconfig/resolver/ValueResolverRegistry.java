@@ -16,15 +16,16 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.resolver.type.*;
+import com.github.steveash.typedconfig.resolver.type.ConfigurationValueResolverFactory;
+import com.github.steveash.typedconfig.resolver.type.ProxyValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.type.container.ListValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.type.container.MapValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.type.container.SetValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.type.container.SortedSetValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.type.simple.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 /**
  * Provides registry services for ValueResolverFactories to lookup the appropriate factory for the given method handle
@@ -49,12 +50,12 @@ public class ValueResolverRegistry {
                     .add(new BigDecimalValueResolverFactory())
                     .add(new EnumValueResolverFactory())
                     .add(new ConfigurationValueResolverFactory())
-                            // collections
+                    // collections
                     .add(new ListValueResolverFactory())
                     .add(new SetValueResolverFactory())
                     .add(new SortedSetValueResolverFactory())
                     .add(new MapValueResolverFactory())
-                            // catch all proxy resolver
+                    // catch all proxy resolver
                     .add(new ProxyValueResolverFactory())
                     .build();
 

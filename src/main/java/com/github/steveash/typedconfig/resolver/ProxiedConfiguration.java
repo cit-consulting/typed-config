@@ -27,5 +27,6 @@ import java.lang.reflect.Method;
  */
 public interface ProxiedConfiguration {
     Class<?> getInterfaceClass();
+
     ImmutableMap<Method, ValueResolver> getResolvers();
 }

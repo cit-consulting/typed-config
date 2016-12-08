@@ -21,8 +21,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -38,16 +36,16 @@ public class HashCodeResolverTest {
     @Before
     public void setUp() throws Exception {
         configA42 = new HashCodeResolver(ConfigA.class,
-                ImmutableMap.<Method, ValueResolver>of(
+                ImmutableMap.of(
                         ConfigA.class.getDeclaredMethod("getA"), new InstanceValueResolver(42)));
         configA43 = new HashCodeResolver(ConfigA.class,
-                ImmutableMap.<Method, ValueResolver>of(
+                ImmutableMap.of(
                         ConfigA.class.getDeclaredMethod("getA"), new InstanceValueResolver(43)));
         configB42 = new HashCodeResolver(ConfigB.class,
-                ImmutableMap.<Method, ValueResolver>of(
+                ImmutableMap.of(
                         ConfigB.class.getDeclaredMethod("getB"), new InstanceValueResolver(42)));
         configB43 = new HashCodeResolver(ConfigB.class,
-                ImmutableMap.<Method, ValueResolver>of(
+                ImmutableMap.of(
                         ConfigB.class.getDeclaredMethod("getB"), new InstanceValueResolver(43)));
     }
 

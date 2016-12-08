@@ -16,10 +16,10 @@
 
 package com.github.steveash.typedconfig.defaultvalue;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.lang.reflect.Method;
 

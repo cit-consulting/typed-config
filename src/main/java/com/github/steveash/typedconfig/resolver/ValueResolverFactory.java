@@ -28,17 +28,15 @@ public interface ValueResolverFactory {
     /**
      * Returns a threadsafe resolver instance that knows how to resolve for this given info
      *
-     *
      * @param binding
-     * @param config the configuration instance to use
+     * @param config  the configuration instance to use
      * @param context
      * @return
      */
     ValueResolver makeForThis(ConfigBinding binding, HierarchicalConfiguration config,
-                                 ConfigFactoryContext context);
+                              ConfigFactoryContext context);
 
     /**
-     *
      * @param configBinding
      * @return true if this factory is able to construct valueResolvers for this particular proxy method
      */

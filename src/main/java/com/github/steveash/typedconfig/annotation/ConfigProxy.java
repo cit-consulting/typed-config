@@ -15,12 +15,12 @@
  */
 package com.github.steveash.typedconfig.annotation;
 
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * Interfaces with this annotation will be bound to proxies at runtime that look up values against an {@link HierarchicalConfiguration Apache Commons
@@ -28,18 +28,18 @@ import org.apache.commons.configuration2.HierarchicalConfiguration;
  * <p>
  * Proxy implementations are provided by the {@link com.github.steveash.typedconfig.ConfigProxyFactory}. This class can be used to manually create proxies, or can be tied into a
  * dependency-injection framework to provide automatic injection of proxies.
- * 
+ *
  * @author jonny
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ConfigProxy {
 
-	/**
-	 * The text value that will prefix all of the key lookups below.  The way that the basekey and the keys
+    /**
+     * The text value that will prefix all of the key lookups below.  The way that the basekey and the keys
      * specified in the @Config annotation can be set on the ConfigProxyFactory.  For example, if you
      * are using the xpath expression engine then you will want to combine them with a slash. if you are
      * using the
-	 */
-	String basekey() default "";
+     */
+    String basekey() default "";
 }

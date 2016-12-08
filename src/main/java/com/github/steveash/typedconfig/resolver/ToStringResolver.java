@@ -16,7 +16,6 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 
 import java.lang.reflect.Method;

@@ -14,27 +14,27 @@
   ~ limitations under the License.
   -->
 <config>
-  <a>43</a>
+    <a>43</a>
 
-  <nestedType>
-    <b>987</b>
-    <nestedNestedType>
-      <c>654</c>
-    </nestedNestedType>
-  </nestedType>
+    <nestedType>
+        <b>987</b>
+        <nestedNestedType>
+            <c>654</c>
+        </nestedNestedType>
+    </nestedType>
 
-  <child>
-    <name>steve</name>
-    <address>
-      <city>Memphis</city>
-      <state>TN</state>
-    </address>
-  </child>
-  <child>
-    <name>bob</name>
-    <address>
-      <city>Dallas</city>
-      <state>TX</state>
-    </address>
-  </child>
+    <child>
+        <name>steve</name>
+        <address>
+            <city>Memphis</city>
+            <state>TN</state>
+        </address>
+    </child>
+    <child>
+        <name>bob</name>
+        <address>
+            <city>Dallas</city>
+            <state>TX</state>
+        </address>
+    </child>
 </config>

@@ -24,6 +24,7 @@ import com.github.steveash.typedconfig.resolver.ValueResolver;
 /**
  * This strategy always caches everything forever and doesn't even bother listening to events.  So this is
  * only useful for immutable configurations that are only setup once and never changed.
+ *
  * @author Steve Ash
  */
 public class CacheEverythingForeverStategy implements CacheStrategy {

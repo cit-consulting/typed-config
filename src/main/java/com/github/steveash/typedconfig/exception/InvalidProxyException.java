@@ -18,6 +18,7 @@ package com.github.steveash.typedconfig.exception;
 
 /**
  * Indicates something wrong with the proxy interface that was passed in to the factory
+ *
  * @author Steve Ash
  */
 public class InvalidProxyException extends RuntimeException {

@@ -16,21 +16,20 @@
 
 package com.github.steveash.typedconfig.resolver;
 
-import java.lang.reflect.Method;
-
-import javax.annotation.Nonnull;
-
+import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.Option;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.Option;
+import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
 
 /**
  * Implements the "lookup" behavior: with this behavior the value in the config is not the "real" value -- its a
  * "lookup key" which will be subsequently looked up in the config and that resulting "real" value will be returned
-* @author Steve Ash
-*/
+ *
+ * @author Steve Ash
+ */
 public class LookupValueResolver implements ValueResolver {
     private volatile String lastLookupKey = null;
     private volatile ValueResolver lastResolver = null;
@@ -42,7 +41,7 @@ public class LookupValueResolver implements ValueResolver {
     private final ValueResolverForBindingFactory resolverFactory;
 
     public LookupValueResolver(HierarchicalConfiguration config, ConfigBinding originalBinding, Class<?> interfaze,
-            Method method, ValueResolverForBindingFactory resolverFactory) {
+                               Method method, ValueResolverForBindingFactory resolverFactory) {
 
         if (!originalBinding.containsOption(Option.LOOKUP_RESULT)) {
             throw new IllegalArgumentException("lookup resolver is only for lookup bindings");

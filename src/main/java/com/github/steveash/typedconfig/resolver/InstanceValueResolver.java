@@ -19,6 +19,7 @@ package com.github.steveash.typedconfig.resolver;
 /**
  * Simple instance value resolver adapter that returns back the same instance every time; used internally
  * with the invocation handler in the proxy value resolver
+ *
  * @author Steve Ash
  */
 class InstanceValueResolver implements ValueResolver {

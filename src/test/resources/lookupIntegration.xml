@@ -14,16 +14,16 @@
   ~ limitations under the License.
   -->
 <config>
-  <headOfHouse>people.person(1)</headOfHouse>
-  <people>
-    <person>
-      <title>mother</title>
-    </person>
-    <person>
-      <title>father</title>
-    </person>
-    <person>
-      <title>sister</title>
-    </person>
-  </people>
+    <headOfHouse>people.person(1)</headOfHouse>
+    <people>
+        <person>
+            <title>mother</title>
+        </person>
+        <person>
+            <title>father</title>
+        </person>
+        <person>
+            <title>sister</title>
+        </person>
+    </people>
 </config>

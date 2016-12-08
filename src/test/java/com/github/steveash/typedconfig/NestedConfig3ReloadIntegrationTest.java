@@ -114,16 +114,19 @@ public class NestedConfig3ReloadIntegrationTest {
 
     public interface Proxy {
         int getA();
+
         Color getColor();
+
         NestedProxy getNestedType();
 
         @Config("child")
         List<Child> getChildren();
     }
 
-    public enum Color{
-        RED,BLACK
+    public enum Color {
+        RED, BLACK
     }
+
     public interface NestedProxy {
         int getB();
 

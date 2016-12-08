@@ -14,27 +14,27 @@
   ~ limitations under the License.
   -->
 <config>
-  <a>42</a>
+    <a>42</a>
 
-  <child>
-    <name>steve</name>
-    <address>
-      <city>Memphis</city>
-      <state>TN</state>
-    </address>
-  </child>
-  <child>
-    <name>bob</name>
-    <address>
-      <city>Dallas</city>
-      <state>TX</state>
-    </address>
-  </child>
-  <child>
-    <name>jim</name>
-    <address>
-      <city>Nashville</city>
-      <state>TN</state>
-    </address>
-  </child>
+    <child>
+        <name>steve</name>
+        <address>
+            <city>Memphis</city>
+            <state>TN</state>
+        </address>
+    </child>
+    <child>
+        <name>bob</name>
+        <address>
+            <city>Dallas</city>
+            <state>TX</state>
+        </address>
+    </child>
+    <child>
+        <name>jim</name>
+        <address>
+            <city>Nashville</city>
+            <state>TN</state>
+        </address>
+    </child>
 </config>

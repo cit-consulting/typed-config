@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Indicates the javabean property to be used on the child object to retrieve the key for that object.  The key type
  * must be simple and must have a correct equals and hashcode implementation
+ *
  * @author Steve Ash
  */
 @Target(ElementType.METHOD)

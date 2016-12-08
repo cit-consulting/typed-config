@@ -15,10 +15,9 @@
  */
 package com.github.steveash.typedconfig.exception;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-
 import com.github.steveash.typedconfig.ConfigurationPrinter;
 import com.github.steveash.typedconfig.Option;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * Thrown by methods on a ConfigProxy that have the {@link Option#REQUIRED} option and the key does not exist (or does not have a value).
@@ -30,7 +29,7 @@ public class RequiredConfigurationKeyNotPresentException extends RuntimeExceptio
     private static final ConfigurationPrinter printer = new ConfigurationPrinter();
 
     public static RequiredConfigurationKeyNotPresentException makeForMissingKey(String key,
-            HierarchicalConfiguration config) {
+                                                                                HierarchicalConfiguration config) {
 
         return new RequiredConfigurationKeyNotPresentException("The configuration key [" + key + "] was not found in " +
                 "the configuration and the property is marked as 'required' or is a primitive value which cannot be " +

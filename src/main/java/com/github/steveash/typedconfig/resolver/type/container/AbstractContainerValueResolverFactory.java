@@ -42,7 +42,7 @@ public abstract class AbstractContainerValueResolverFactory implements ValueReso
     public ValueResolver makeForThis(final ConfigBinding containerBinding, final HierarchicalConfiguration config,
                                      final ConfigFactoryContext context) {
         return new ValueResolver() {
-            private Object cacheValue = resolve();
+            private final Object cacheValue = resolve();
 
             @Override
             public Object resolve() {

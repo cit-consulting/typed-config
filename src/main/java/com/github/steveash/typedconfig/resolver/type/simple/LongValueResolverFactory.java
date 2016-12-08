@@ -16,12 +16,12 @@
 
 package com.github.steveash.typedconfig.resolver.type.simple;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.ConvertableValueResolver;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
  * @author Steve Ash
@@ -30,11 +30,12 @@ public class LongValueResolverFactory extends SimpleValueResolverFactory {
 
     @Override
     public ValueResolver makeForThis(final ConfigBinding binding, final HierarchicalConfiguration config,
-                                           ConfigFactoryContext context) {
+                                     ConfigFactoryContext context) {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Long.class, key) {
             private final Object cacheValue = config.getLong(key, null);
+
             @Override
             public Long resolve() {
                 return (Long) cacheValue;

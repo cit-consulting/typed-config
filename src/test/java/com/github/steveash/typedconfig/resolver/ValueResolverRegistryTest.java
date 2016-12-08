@@ -3,7 +3,6 @@ package com.github.steveash.typedconfig.resolver;
 import com.github.steveash.typedconfig.ConfigBinding;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static junit.framework.Assert.assertNotNull;

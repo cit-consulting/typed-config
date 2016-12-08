@@ -16,7 +16,6 @@
 
 package com.github.steveash.typedconfig.defaultvalue;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.Option;
@@ -24,6 +23,7 @@ import com.github.steveash.typedconfig.annotation.Config;
 import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.lang.reflect.Method;
 
@@ -32,11 +32,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * Defines the strategy of decorating the resolver by inspecting the ConfigValue annotation on the
  * method.  The strategy is:
- *   If the defaultLookup is set try that
- *     If defaultLookup finds nothing then move on to try default Value
- *   If the defaultValue is set try that
- *   If neither of these resolve and the property is marked as required (or its primitive which is implicitly reqd)
- *     then throw a requiredPropertyMissing exception
+ * If the defaultLookup is set try that
+ * If defaultLookup finds nothing then move on to try default Value
+ * If the defaultValue is set try that
+ * If neither of these resolve and the property is marked as required (or its primitive which is implicitly reqd)
+ * then throw a requiredPropertyMissing exception
  *
  * @author Steve Ash
  */

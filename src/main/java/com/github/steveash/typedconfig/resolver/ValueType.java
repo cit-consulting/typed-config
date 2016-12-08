@@ -18,6 +18,7 @@ package com.github.steveash.typedconfig.resolver;
 
 /**
  * The value type controls how types are nested within one another
+ *
  * @author Steve Ash
  */
 public enum ValueType {
