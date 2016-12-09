@@ -18,6 +18,7 @@ package com.github.steveash.typedconfig.validation;
 
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 
+import javax.validation.ConstraintViolationException;
 import java.lang.reflect.Method;
 
 /**
@@ -25,5 +26,15 @@ import java.lang.reflect.Method;
  */
 public interface ValidationStrategy {
 
+    @Deprecated
     ValueResolver decorateForValidation(ValueResolver resolver, Class<?> interfaze, Method method);
+
+    /**
+     * Validates all constraints on {@code object}.
+     *
+     * @param object object to validate
+     * @return the object if the validation is successful
+     * @throws ConstraintViolationException if the validation is not passed
+     */
+    Object validate(Object object);
 }

@@ -16,137 +16,134 @@
 
 package com.github.steveash.typedconfig.validation;
 
-import com.github.steveash.typedconfig.exception.InvalidProxyException;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
+import com.github.steveash.typedconfig.ConfigProxyFactory;
+import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
+import org.apache.commons.configuration2.ConfigurationConverter;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Pattern;
+import java.util.List;
+import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Steve Ash
  */
-@Ignore //после обновлении версии hibernate validation до 5.x интерфейсы игнорируются при валидации
 public class BeanValidatorValidationStrategyTest {
 
-    private BeanValidatorValidationStrategy strategy;
-    private ValueResolver resolver;
-
-    @Before
-    public void setUp() throws Exception {
-        strategy = new BeanValidatorValidationStrategy();
-        resolver = mock(ValueResolver.class);
+    @Test
+    public void testProxyEmailGood() {
+        Properties properties = new Properties();
+        properties.put("email", "test@tets.com");
+        getProxy(ProxyEmail.class, properties);
     }
 
-    @Test(expected = InvalidProxyException.class)
-    public void shouldThrowExceptionIfAnnotationsOnInvalidMethods() throws Exception {
-        strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("eekThisIsNotAJavaBean"));
+    @Test(expected = ConstraintViolationException.class)
+    public void testProxyEmailBad() {
+        Properties properties = new Properties();
+        properties.put("email", "1234");
+        getProxy(ProxyEmail.class, properties);
         fail();
     }
 
     @Test
-    public void shouldValidatePropertyForGoodStrings() throws Exception {
-        when(resolver.resolve()).thenReturn("yep");
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getIt1"));
-
-        assertEquals("yep", validating.resolve());
+    public void testProxyNotEmptyGood() {
+        Properties properties = new Properties();
+        properties.put("notEmpty", "anystring");
+        getProxy(ProxyNotEmpty.class, properties);
     }
 
     @Test(expected = ConstraintViolationException.class)
-    public void shouldValidatePropertyForBadStrings() throws Exception {
-        when(resolver.resolve()).thenReturn("    "); // thats blank
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getIt1"));
-
-        validating.resolve();
+    public void testProxyNotEmptyBad() {
+        Properties properties = new Properties();
+        properties.put("notEmpty", "");
+        getProxy(ProxyNotEmpty.class, properties);
         fail();
     }
 
     @Test
-    public void shouldValidatePropertyForGoodInts() throws Exception {
-        when(resolver.resolve()).thenReturn(15);
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getInt"));
-
-        assertEquals(15, validating.resolve());
+    public void testProxyRegexpGood() {
+        Properties properties = new Properties();
+        properties.put("regexp", "123-45-6789");
+        getProxy(ProxyRegexp.class, properties);
     }
 
     @Test(expected = ConstraintViolationException.class)
-    public void shouldValidatePropertyForBadInts() throws Exception {
-        when(resolver.resolve()).thenReturn(25); // thats blank
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getInt"));
+    public void testProxyRegexpBad() {
+        Properties properties = new Properties();
+        properties.put("regexp", "1234567");
+        getProxy(ProxyRegexp.class, properties);
+        fail();
+    }
 
-        validating.resolve();
+    @Test
+    public void testProxyRandeGood() {
+        Properties properties = new Properties();
+        properties.put("rande", "15");
+        getProxy(ProxyRande.class, properties);
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void testProxyRandeBad() {
+        Properties properties = new Properties();
+        properties.put("rande", "5");
+        getProxy(ProxyRande.class, properties);
         fail();
     }
 
 
     @Test
-    public void shouldValidatePropertyForGoodRegex() throws Exception {
-        when(resolver.resolve()).thenReturn("555-55-5555");
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getARegularOne"));
-
-        assertEquals("555-55-5555", validating.resolve());
+    public void testProxyListEmptyGood() {
+        Properties properties = new Properties();
+        properties.put("list", "1,2,3");
+        getProxy(ProxyListEmpty.class, properties);
     }
 
     @Test(expected = ConstraintViolationException.class)
-    public void shouldValidatePropertyForBadRegex() throws Exception {
-        when(resolver.resolve()).thenReturn("123456"); // thats blank
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getARegularOne"));
-
-        validating.resolve();
+    public void testProxyListEmptyBad() {
+        Properties properties = new Properties();
+        getProxy(ProxyListEmpty.class, properties);
         fail();
     }
 
-    @Test
-    public void shouldValidatePropertyForGoodEmail() throws Exception {
-        when(resolver.resolve()).thenReturn("stevemash@gmail.com");
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getEmail"));
-
-        assertEquals("stevemash@gmail.com", validating.resolve());
+    private Object getProxy(Class proxyClass, Properties properties) {
+        BaseHierarchicalConfiguration configOfProperties;
+        configOfProperties = new BaseHierarchicalConfiguration();
+        configOfProperties.append(ConfigurationConverter.getConfiguration(properties));
+        configOfProperties.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return ConfigProxyFactory.getDefault().make(proxyClass, configOfProperties);
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void shouldValidatePropertyForBadEmail() throws Exception {
-        when(resolver.resolve()).thenReturn("thisAintNoEmailAddress"); // thats blank
-        ValueResolver validating = strategy.decorateForValidation(resolver, MockProxy.class,
-                MockProxy.class.getDeclaredMethod("getEmail"));
-
-        validating.resolve();
-        fail();
-    }
-
-    public interface MockProxy {
-
-        @NotBlank
-        String getIt1();
-
-        @NotBlank
-        String eekThisIsNotAJavaBean();
-
-        @Range(min = 10, max = 20)
-        int getInt();
-
-        @Pattern(regexp = "\\d{3}-\\d{2}-\\d{4}")
-        String getARegularOne();
-
+    public interface ProxyEmail {
         @Email
         String getEmail();
+    }
+
+    public interface ProxyNotEmpty {
+        @NotBlank
+        String getNotEmpty();
+    }
+
+    public interface ProxyRegexp {
+        @Pattern(regexp = "\\d{3}-\\d{2}-\\d{4}")
+        String getRegexp();
+    }
+
+
+    public interface ProxyRande {
+        @Range(min = 10, max = 20)
+        int getRande();
+    }
+
+    public interface ProxyListEmpty {
+        @NotEmpty
+        List<Integer> getList();
     }
 }

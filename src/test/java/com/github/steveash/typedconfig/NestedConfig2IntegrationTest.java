@@ -20,12 +20,9 @@ import com.github.steveash.typedconfig.annotation.Config;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -60,12 +57,6 @@ public class NestedConfig2IntegrationTest {
         assertEquals(1.5, proxy.getC().get(3), 0.01);
     }
 
-    @Ignore //после обновлении версии hibernate validation до 5.x интерфейсы игнорируются при валидации
-    @Test(expected = ConstraintViolationException.class)
-    public void shouldValidateBadListItems() throws Exception {
-        proxy.getD();
-    }
-
     @Test
     public void shouldValidateGoodListItems() throws Exception {
         List<Integer> results = proxy.getE();
@@ -80,12 +71,6 @@ public class NestedConfig2IntegrationTest {
 
         List<Float> getC();
 
-        @NotEmpty
-            // should fail
-        List<Integer> getD();
-
-        @NotEmpty
-            // should not
         List<Integer> getE();
     }
 }

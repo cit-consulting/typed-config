@@ -39,5 +39,5 @@ public enum Option {
      */
     LOOKUP_RESULT;
 
-    public static final List<Option> EmptyOptions = new ArrayList<Option>();
+    public static final List<Option> EmptyOptions = new ArrayList<>();
 }

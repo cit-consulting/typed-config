@@ -35,6 +35,7 @@ import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 
+import javax.validation.Validation;
 import java.util.List;
 
 public class ConfigProxyFactory {
@@ -80,7 +81,12 @@ public class ConfigProxyFactory {
         ConfigBinding binding = ConfigBinding.makeRootBinding(TypeToken.of(interfaze));
         ValueResolverFactory factory = context.getRegistry().lookup(binding);
 
-        return (T) factory.makeForThis(binding, configuration, context).resolve();
+        T o = (T) factory.makeForThis(binding, configuration, context).resolve();
+        Validation.buildDefaultValidatorFactory()
+                .getValidator()
+                .validate(o);
+
+        return (T) context.getValidationStrategy().validate(o);
     }
 
     private static final class Holder {

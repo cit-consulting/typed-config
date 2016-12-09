@@ -21,6 +21,8 @@ import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.google.common.collect.Sets;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.lang.annotation.Annotation;
@@ -40,6 +42,17 @@ public class BeanValidatorValidationStrategy implements ValidationStrategy {
 
     public BeanValidatorValidationStrategy() {
         this(Validation.buildDefaultValidatorFactory().getValidator());
+    }
+
+    @Override
+    public Object validate(Object object) {
+        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
+        if (constraintViolations.size() > 0) {
+            throw new ConstraintViolationException("The configuration " + object.getClass().getName()
+                    + " returned value [" + object + "] which failed the validation constraints: "
+                    + constraintViolations.toString(), constraintViolations);
+        }
+        return object;
     }
 
     @Override

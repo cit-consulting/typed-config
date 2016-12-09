@@ -28,4 +28,9 @@ public class NoValidationStrategy implements ValidationStrategy {
     public ValueResolver decorateForValidation(ValueResolver resolver, Class<?> interfaze, Method method) {
         return resolver;
     }
+
+    @Override
+    public Object validate(Object object) {
+        return object;
+    }
 }

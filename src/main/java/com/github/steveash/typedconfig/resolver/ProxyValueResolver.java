@@ -94,7 +94,6 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
 
         resolver = context.getDefaultStrategy()
                 .decorateForDefaults(resolver, config, binding, context, interfaze, method);
-        resolver = context.getValidationStrategy().decorateForValidation(resolver, interfaze, method);
         resolver = context.getCacheStrategy().decorateForCaching(resolver, binding, context);
 
         return resolver;

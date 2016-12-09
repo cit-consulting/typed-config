@@ -27,8 +27,6 @@ import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.Collections;
 
@@ -62,13 +60,10 @@ public class DefaultValueStrategyTest {
 
         badResolver = mock(ValueResolver.class);
         when(badResolver.resolve()).thenReturn(null);
-        when(badResolver.convertDefaultValue(anyString())).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                String arg = (String) invocation.getArguments()[0];
-                if (isBlank(arg)) return null;
-                return arg;
-            }
+        when(badResolver.convertDefaultValue(anyString())).then(invocation -> {
+            String arg = (String) invocation.getArguments()[0];
+            if (isBlank(arg)) return null;
+            return arg;
         });
         when(badResolver.configurationKeyToLookup()).thenReturn("aKey");
 
