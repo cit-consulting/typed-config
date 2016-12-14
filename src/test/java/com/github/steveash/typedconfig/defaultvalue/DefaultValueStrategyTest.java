@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static com.github.steveash.typedconfig.util.StringUtils.isBlank;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;

@@ -27,7 +27,7 @@ import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.lang.reflect.Method;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static com.github.steveash.typedconfig.util.StringUtils.isNotBlank;
 
 /**
  * Defines the strategy of decorating the resolver by inspecting the ConfigValue annotation on the

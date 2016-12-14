@@ -15,8 +15,6 @@
  */
 package com.github.steveash.typedconfig;
 
-import com.github.steveash.typedconfig.caching.CacheEverythingForeverStategy;
-import com.github.steveash.typedconfig.caching.CacheNestedProxyStrategy;
 import com.github.steveash.typedconfig.caching.CacheNothingStrategy;
 import com.github.steveash.typedconfig.caching.CacheStrategy;
 import com.github.steveash.typedconfig.defaultvalue.ConfigValueDefaultValueStrategy;
@@ -31,9 +29,7 @@ import com.github.steveash.typedconfig.validation.ValidationStrategy;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
-import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.event.ConfigurationEvent;
 
 import javax.validation.Validation;
 import java.util.List;
@@ -74,7 +70,6 @@ public class ConfigProxyFactory {
     public <T> T make(Class<T> interfaze, HierarchicalConfiguration configuration) {
         Preconditions.checkNotNull(interfaze);
         Preconditions.checkArgument(interfaze.isInterface(), "You can only build proxies for interfaces");
-        ConfigurationUtils.asEventSource(configuration, true).addEventListener(ConfigurationEvent.ANY, context);
 //        configuration.addConfigurationListener(context);
         // the context listens to the root configuration because the subnode configs dont seem to propagate events
 
@@ -99,7 +94,7 @@ public class ConfigProxyFactory {
         private ValidationStrategy validationStrategy = new BeanValidatorValidationStrategy();
         private DefaultValueStrategy defaultStrategy = new ConfigValueDefaultValueStrategy();
         private KeyCombinationStrategy keyStrategy = new SmartDelimitedKeyCombinationStrategy();
-        private CacheStrategy cacheStrategy = new CacheNestedProxyStrategy();
+        private CacheStrategy cacheStrategy = new CacheNothingStrategy();
 
         private Builder() {
         }
@@ -127,30 +122,6 @@ public class ConfigProxyFactory {
          */
         public Builder cacheNothing() {
             this.cacheStrategy = new CacheNothingStrategy();
-            return this;
-        }
-
-        /**
-         * This strategy caches only the nested proxies so they aren't rebuilt on every access.  We can't think of
-         * a use case where this would lead to unexpected behavior, and thus it is the default.  However, if you
-         * always want to rebuild every proxy every time, then @see #cacheNothing
-         *
-         * @return
-         */
-        public Builder cacheOnlyProxies() {
-            this.cacheStrategy = new CacheNestedProxyStrategy();
-            return this;
-        }
-
-        /**
-         * If you are only loading the configuration once and it is immutable at runtime, then prefer the
-         * cacheEverythingForever approach.  The underlying configuration will be accessed only the first time
-         * to lazily init the value
-         *
-         * @return
-         */
-        public Builder cacheEverythingForever() {
-            this.cacheStrategy = new CacheEverythingForeverStategy();
             return this;
         }
 

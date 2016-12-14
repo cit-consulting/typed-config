@@ -23,6 +23,7 @@
     <groupId>com.github.steveash.typed-config</groupId>
     <artifactId>typed-config</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <packaging>bundle</packaging>
 
     <licenses>
         <license>
@@ -37,13 +38,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <javadoc.opts>-Xdoclint:none</javadoc.opts>
 
         <slf4j.version>1.7.7</slf4j.version>
         <guava.version>19.0</guava.version>
 
         <commons-configuration2.version>2.1</commons-configuration2.version>
-        <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-lang3.version>3.3.2</commons-lang3.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
 
@@ -51,6 +51,8 @@
 
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
+
+        <shade.package>com.github.steveash.typedconfig.util</shade.package>
     </properties>
     <scm>
         <connection>scm:git:git@github.com:cit-consulting/typed-config.git</connection>
@@ -59,7 +61,105 @@
     </scm>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>com.google.guava:guava</artifact>
+                                    <excludes>
+                                        <exclude>com/google/thirdparty/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.google.guava:guava</include>
+                                    <include>commons-beanutils:commons-beanutils</include>
+                                    <include>commons-collections:commons-collections</include>
+                                </includes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>${shade.package}.com.google.common</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons</pattern>
+                                    <shadedPattern>${shade.package}.org.apache.commons</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            !${shade.package}.*,
+                            com.github.steveash.typedconfig.*
+                        </Export-Package>
+                        <Private-Package>
+                            ${shade.package}.*
+                        </Private-Package>
+                        <Bundle-Description>
+                            ${project.description}
+                        </Bundle-Description>
+                        <Import-Package>
+                            !com.google.common.*,
+                            !org.apache.commons.beanutils,
+                            !org.apache.commons.collections,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/classes/features.xml</file>
+                                    <type>xml</type>
+                                    <classifier>features</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -67,28 +167,18 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <manifestFile>
-                            src/main/resources/META-INF/MANIFEST.MF
-                        </manifestFile>
-                    </archive>
-                </configuration>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -101,7 +191,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <additionalparam>${javadoc.opts}</additionalparam>
+                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                     </execution>
                 </executions>
@@ -115,6 +205,12 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
+        <!--replace commons-logging-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-configuration2</artifactId>
@@ -126,11 +222,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--replace commons-logging-->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
         <!--TODO shade -->
         <dependency>
@@ -155,12 +250,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
-        </dependency>
-        <!--TODO shade -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>

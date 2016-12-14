@@ -16,8 +16,8 @@
 
 package com.github.steveash.typedconfig.keycombine;
 
+import com.github.steveash.typedconfig.util.StringUtils;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Steve Ash

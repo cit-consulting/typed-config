@@ -16,17 +16,10 @@
 
 package com.github.steveash.typedconfig.validation;
 
-import com.github.steveash.typedconfig.PropertyUtil;
-import com.github.steveash.typedconfig.exception.InvalidProxyException;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
-import com.google.common.collect.Sets;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.Set;
 
 /**
@@ -53,64 +46,5 @@ public class BeanValidatorValidationStrategy implements ValidationStrategy {
                     + constraintViolations.toString(), constraintViolations);
         }
         return object;
-    }
-
-    @Override
-    public ValueResolver decorateForValidation(ValueResolver resolver, Class<?> interfaze, Method method) {
-        if (PropertyUtil.isProperty(method)) {
-            if (hasValidationAnnotation(method)) {
-                String propertyName = PropertyUtil.getPropertyName(method);
-                resolver = new ValidatorResolverDecorator(resolver, interfaze, propertyName, validator);
-            }
-        } else {
-            throwIfMethodHasValidationAnnotations(method);
-        }
-        return resolver;
-    }
-
-    private void throwIfMethodHasValidationAnnotations(Method method) {
-        Annotation ann = getFirstValidationAnnotationOrNull(method);
-        if (ann != null) {
-            throw new InvalidProxyException("The proxy method " + method.getName() +
-                    " has the validation annotation " + ann.toString() + " but is not a javabean property " +
-                    "(doesnt start with 'is' or 'get').  Per the validator spec, you can only validate properties");
-
-        }
-    }
-
-    private boolean hasValidationAnnotation(Method method) {
-        return getFirstValidationAnnotationOrNull(method) != null;
-    }
-
-    private Annotation getFirstValidationAnnotationOrNull(Method method) {
-        Set<Annotation> checkedAnnotations = Sets.newHashSet();
-        for (Annotation a : method.getDeclaredAnnotations()) {
-            if (isValidationAnnotation(a, checkedAnnotations)) {
-                return a;
-            }
-        }
-        return null;
-    }
-
-    private boolean isValidationAnnotation(Annotation a, Set<Annotation> checkedAnnotations) {
-        if (checkedAnnotations.contains(a)) {
-            return false;
-        }
-        checkedAnnotations.add(a); // catch cycles
-
-        if (a.annotationType().getName().startsWith("java.lang")) {
-            return false;
-        }
-
-        if (a.annotationType().getName().startsWith("javax.validation")) {
-            return true;
-        }
-
-        for (Annotation nestedAnnotation : a.annotationType().getDeclaredAnnotations()) {
-            if (isValidationAnnotation(nestedAnnotation, checkedAnnotations)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

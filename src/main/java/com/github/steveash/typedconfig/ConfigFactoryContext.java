@@ -28,11 +28,8 @@ import com.github.steveash.typedconfig.resolver.ValueType;
 import com.github.steveash.typedconfig.validation.ValidationStrategy;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.event.ConfigurationEvent;
-import org.apache.commons.configuration2.event.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +44,7 @@ import java.util.List;
  *
  * @author Steve Ash
  */
-public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
+public class ConfigFactoryContext {
     private static final Logger log = LoggerFactory.getLogger(ConfigFactoryContext.class);
 
     private final ValueResolverRegistry registry;
@@ -56,7 +53,6 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
     private final KeyCombinationStrategy keyStrategy;
     private final CacheStrategy cacheStrategy;
     private final ConfigAnnotationResolver annotationResolver;
-    private final EventBus eventBus = new EventBus("config-proxy");
 
     public ConfigFactoryContext(ValueResolverRegistry registry, ValidationStrategy validationStrategy,
                                 DefaultValueStrategy defaultStrategy, KeyCombinationStrategy keyStrategy,
@@ -67,8 +63,6 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
         this.defaultStrategy = defaultStrategy;
         this.cacheStrategy = cacheStrategy;
         this.annotationResolver = new ConfigAnnotationResolver();
-
-        eventBus.register(this);
     }
 
     /**
@@ -122,10 +116,6 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
         return cacheStrategy;
     }
 
-    public EventBus getEventBus() {
-        return eventBus;
-    }
-
     public ConfigAnnotationResolver getAnnotationResolver() {
         return annotationResolver;
     }
@@ -177,16 +167,5 @@ public class ConfigFactoryContext implements EventListener<ConfigurationEvent> {
         }
         throw new IllegalArgumentException("Method " + method.toGenericString() + " takes > 0 parameters which " +
                 "is not supported.");
-    }
-
-    @Override
-    public void onEvent(ConfigurationEvent event) {
-        if (event.isBeforeUpdate()) {
-            return;
-        }
-
-//        System.out.println("Received event: " + event.getType() + " for property name: " + event.getPropertyName() +
-//                        " -> " + event.getPropertyValue() + ", is before? " + event.isBeforeUpdate());
-        eventBus.post(event);
     }
 }

@@ -16,19 +16,10 @@
 
 package com.github.steveash.typedconfig.validation;
 
-import com.github.steveash.typedconfig.resolver.ValueResolver;
-
-import java.lang.reflect.Method;
-
 /**
  * @author Steve Ash
  */
 public class NoValidationStrategy implements ValidationStrategy {
-    @Override
-    public ValueResolver decorateForValidation(ValueResolver resolver, Class<?> interfaze, Method method) {
-        return resolver;
-    }
-
     @Override
     public Object validate(Object object) {
         return object;

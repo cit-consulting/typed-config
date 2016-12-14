@@ -21,7 +21,7 @@ import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.resolver.SimpleValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.lang3.StringUtils;
+import com.github.steveash.typedconfig.util.StringUtils;
 
 /**
  * @author Steve Ash
