@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.steveash.typedconfig.exception;
+
+package com.github.steveash.typedconfig;
 
 /**
- * Thrown by methods on a ConfigProxy when the value returned by a method would fail validation.
+ * Indicates something wrong with the proxy interface that was passed in to the factory
  *
- * @author jonny
+ * @author Steve Ash
  */
-public class InvalidConfigurationValueException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-
-    public InvalidConfigurationValueException(final String message) {
+public class InvalidProxyException extends RuntimeException {
+    public InvalidProxyException(String message) {
         super(message);
+    }
+
+    public InvalidProxyException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

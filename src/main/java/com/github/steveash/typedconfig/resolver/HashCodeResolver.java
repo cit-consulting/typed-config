@@ -36,12 +36,11 @@ public class HashCodeResolver implements ValueResolver {
 
     @Override
     public Object resolve() {
-        HashCodeBuilder builder = new HashCodeBuilder(2711, 2789);
+        HashCodeBuilder builder = new HashCodeBuilder();
         for (ValueResolver resolver : proxyMethodResolvers.values()) {
             builder.append(resolver.resolve());
         }
-        builder.append(interfaze.getCanonicalName());
-        return builder.build();
+        return builder.append(interfaze.getCanonicalName()).build();
     }
 
     @Override

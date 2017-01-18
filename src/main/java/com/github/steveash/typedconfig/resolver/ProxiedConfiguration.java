@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * a proxied type.  This really isn't intended to be used by a consumer of this, but allows
  * us to do things like implement equals (to pull things from the argument)
  */
-public interface ProxiedConfiguration {
+interface ProxiedConfiguration {
     Class<?> getInterfaceClass();
 
     ImmutableMap<Method, ValueResolver> getResolvers();

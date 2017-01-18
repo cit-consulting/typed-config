@@ -18,8 +18,8 @@ package com.github.steveash.typedconfig.resolver;
 
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.Option;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import com.github.steveash.typedconfig.util.StringUtils;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;

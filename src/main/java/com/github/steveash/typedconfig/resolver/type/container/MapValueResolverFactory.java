@@ -17,9 +17,9 @@
 package com.github.steveash.typedconfig.resolver.type.container;
 
 import com.github.steveash.typedconfig.ConfigBinding;
+import com.github.steveash.typedconfig.InvalidProxyException;
+import com.github.steveash.typedconfig.RequiredConfigurationKeyNotPresentException;
 import com.github.steveash.typedconfig.annotation.MapKey;
-import com.github.steveash.typedconfig.exception.InvalidProxyException;
-import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableMap;
@@ -57,7 +57,7 @@ public class MapValueResolverFactory extends AbstractContainerValueResolverFacto
         }
     }
 
-    protected TypeToken<?> getKeyType(TypeToken<?> mapType) {
+    private TypeToken<?> getKeyType(TypeToken<?> mapType) {
         try {
             return getEntryType(mapType)
                     .resolveType(Entry.class.getDeclaredMethod("getKey").getGenericReturnType());

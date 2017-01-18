@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.steveash.typedconfig.exception;
+package com.github.steveash.typedconfig;
 
-import com.github.steveash.typedconfig.ConfigurationPrinter;
-import com.github.steveash.typedconfig.Option;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**

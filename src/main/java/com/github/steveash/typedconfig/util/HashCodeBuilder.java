@@ -4,15 +4,9 @@ public class HashCodeBuilder {
     private final int iConstant;
     private int iTotal = 0;
 
-    public HashCodeBuilder(final int initialOddNumber, final int multiplierOddNumber) {
-        if (initialOddNumber % 2 == 0) {
-            throw new IllegalArgumentException("HashCodeBuilder requires an odd initial value");
-        }
-        if (multiplierOddNumber % 2 == 0) {
-            throw new IllegalArgumentException("HashCodeBuilder requires an odd multiplier");
-        }
-        iConstant = multiplierOddNumber;
-        iTotal = initialOddNumber;
+    public HashCodeBuilder() {
+        iConstant = 2789;
+        iTotal = 2711;
     }
 
     public Integer build() {

@@ -15,8 +15,6 @@
  */
 package com.github.steveash.typedconfig;
 
-import com.github.steveash.typedconfig.caching.CacheNothingStrategy;
-import com.github.steveash.typedconfig.caching.CacheStrategy;
 import com.github.steveash.typedconfig.defaultvalue.ConfigValueDefaultValueStrategy;
 import com.github.steveash.typedconfig.defaultvalue.DefaultValueStrategy;
 import com.github.steveash.typedconfig.keycombine.KeyCombinationStrategy;
@@ -38,7 +36,7 @@ public class ConfigProxyFactory {
 
     private final ConfigFactoryContext context;
 
-    ConfigProxyFactory(ConfigFactoryContext context) {
+    private ConfigProxyFactory(ConfigFactoryContext context) {
         this.context = context;
     }
 
@@ -94,7 +92,6 @@ public class ConfigProxyFactory {
         private ValidationStrategy validationStrategy = new BeanValidatorValidationStrategy();
         private DefaultValueStrategy defaultStrategy = new ConfigValueDefaultValueStrategy();
         private KeyCombinationStrategy keyStrategy = new SmartDelimitedKeyCombinationStrategy();
-        private CacheStrategy cacheStrategy = new CacheNothingStrategy();
 
         private Builder() {
         }
@@ -108,8 +105,7 @@ public class ConfigProxyFactory {
                     ValueResolverRegistry.makeRegistryWithUserTypes(userFactories),
                     validationStrategy,
                     defaultStrategy,
-                    keyStrategy,
-                    cacheStrategy
+                    keyStrategy
             );
         }
 
@@ -120,15 +116,6 @@ public class ConfigProxyFactory {
          *
          * @return
          */
-        public Builder cacheNothing() {
-            this.cacheStrategy = new CacheNothingStrategy();
-            return this;
-        }
-
-        public Builder withCustomCacheStrategy(CacheStrategy cacheStrategy) {
-            this.cacheStrategy = Preconditions.checkNotNull(cacheStrategy);
-            return this;
-        }
 
         public Builder withCustomKeyCombinationStrategy(KeyCombinationStrategy keyStrategy) {
             this.keyStrategy = Preconditions.checkNotNull(keyStrategy);

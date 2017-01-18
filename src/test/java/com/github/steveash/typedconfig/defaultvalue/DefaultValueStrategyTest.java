@@ -21,7 +21,7 @@ import com.github.steveash.typedconfig.ConfigFactoryContext;
 import com.github.steveash.typedconfig.ConfigProxyFactoryTest;
 import com.github.steveash.typedconfig.Option;
 import com.github.steveash.typedconfig.annotation.Config;
-import com.github.steveash.typedconfig.exception.RequiredConfigurationKeyNotPresentException;
+import com.github.steveash.typedconfig.RequiredConfigurationKeyNotPresentException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.HierarchicalConfiguration;

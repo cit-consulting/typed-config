@@ -18,8 +18,8 @@ package com.github.steveash.typedconfig.resolver.type.container;
 
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
+import com.github.steveash.typedconfig.InvalidProxyException;
 import com.github.steveash.typedconfig.Option;
-import com.github.steveash.typedconfig.exception.InvalidProxyException;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;

@@ -16,7 +16,7 @@
 
 package com.github.steveash.typedconfig.defaultvalue;
 
-import com.github.steveash.typedconfig.exception.InvalidConfigurationValueException;
+import com.github.steveash.typedconfig.InvalidConfigurationValueException;
 import com.github.steveash.typedconfig.resolver.ForwardingValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 

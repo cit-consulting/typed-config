@@ -18,7 +18,6 @@ package com.github.steveash.typedconfig;
 
 import com.github.steveash.typedconfig.annotation.Config;
 import com.github.steveash.typedconfig.annotation.ConfigProxy;
-import com.github.steveash.typedconfig.caching.CacheStrategy;
 import com.github.steveash.typedconfig.defaultvalue.DefaultValueStrategy;
 import com.github.steveash.typedconfig.keycombine.KeyCombinationStrategy;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
@@ -46,22 +45,18 @@ import java.util.List;
  */
 public class ConfigFactoryContext {
     private static final Logger log = LoggerFactory.getLogger(ConfigFactoryContext.class);
-
     private final ValueResolverRegistry registry;
     private final ValidationStrategy validationStrategy;
     private final DefaultValueStrategy defaultStrategy;
     private final KeyCombinationStrategy keyStrategy;
-    private final CacheStrategy cacheStrategy;
     private final ConfigAnnotationResolver annotationResolver;
 
     public ConfigFactoryContext(ValueResolverRegistry registry, ValidationStrategy validationStrategy,
-                                DefaultValueStrategy defaultStrategy, KeyCombinationStrategy keyStrategy,
-                                CacheStrategy cacheStrategy) {
+                                DefaultValueStrategy defaultStrategy, KeyCombinationStrategy keyStrategy) {
         this.registry = registry;
         this.keyStrategy = keyStrategy;
         this.validationStrategy = validationStrategy;
         this.defaultStrategy = defaultStrategy;
-        this.cacheStrategy = cacheStrategy;
         this.annotationResolver = new ConfigAnnotationResolver();
     }
 
@@ -110,10 +105,6 @@ public class ConfigFactoryContext {
 
     public DefaultValueStrategy getDefaultStrategy() {
         return defaultStrategy;
-    }
-
-    public CacheStrategy getCacheStrategy() {
-        return cacheStrategy;
     }
 
     public ConfigAnnotationResolver getAnnotationResolver() {

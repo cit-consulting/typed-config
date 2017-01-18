@@ -1,10 +1,6 @@
 package com.github.steveash.typedconfig.util;
 
-/**
- * Created by dmitrijrudenko on 09.12.16.
- */
 public class StringUtils {
-
     /**
      * <p>Checks if a CharSequence is whitespace, empty ("") or null.</p>
      * <p>

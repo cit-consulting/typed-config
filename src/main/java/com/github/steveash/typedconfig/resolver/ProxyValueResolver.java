@@ -22,7 +22,6 @@ import com.github.steveash.typedconfig.Option;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.reflect.TypeToken;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 import java.lang.reflect.InvocationHandler;
@@ -62,7 +61,7 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
         return parentBinding.getConfigKeyToLookup();
     }
 
-    public <T> T make(Class<T> interfaze, HierarchicalConfiguration configuration) {
+    private <T> T make(Class<T> interfaze, HierarchicalConfiguration configuration) {
         try {
             return tryToMake(interfaze, configuration);
         } catch (NoSuchMethodException e) {
@@ -94,8 +93,6 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
 
         resolver = context.getDefaultStrategy()
                 .decorateForDefaults(resolver, config, binding, context, interfaze, method);
-        resolver = context.getCacheStrategy().decorateForCaching(resolver, binding, context);
-
         return resolver;
     }
 
@@ -147,14 +144,13 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
 
     private ValueResolver makeToStringResolver(Class<?> interfaze, ImmutableMap<Method, ValueResolver> resolverMap) {
         ToStringResolver resolver = new ToStringResolver(interfaze, resolverMap);
-        ConfigBinding toStringBinding = ConfigBinding.makeForKeyAndType("$TOSTRING$", TypeToken.of(String.class));
-        return context.getCacheStrategy().decorateForCaching(resolver, toStringBinding, context);
+        return resolver;
+
     }
 
     private ValueResolver makeHashResolver(Class<?> interfaze, ImmutableMap<Method, ValueResolver> resolverMap) {
         HashCodeResolver resolver = new HashCodeResolver(interfaze, resolverMap);
-        ConfigBinding hashBinding = ConfigBinding.makeForKeyAndType("$HASHCODE$", TypeToken.of(Integer.class));
-        return context.getCacheStrategy().decorateForCaching(resolver, hashBinding, context);
+        return resolver;
     }
 
     private boolean proxyEquals(Class<?> thisIface, ImmutableMap<Method, ValueResolver> thisResolvers, Object that) {

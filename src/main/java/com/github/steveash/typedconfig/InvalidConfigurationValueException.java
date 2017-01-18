@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.github.steveash.typedconfig.caching;
-
-import com.github.steveash.typedconfig.ConfigBinding;
-import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.resolver.ValueResolver;
+package com.github.steveash.typedconfig;
 
 /**
- * The strategy for caching values from the configuration
+ * Thrown by methods on a ConfigProxy when the value returned by a method would fail validation.
  *
- * @author Steve Ash
+ * @author jonny
  */
-public interface CacheStrategy {
+public class InvalidConfigurationValueException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-    ValueResolver decorateForCaching(ValueResolver resolver, ConfigBinding binding, ConfigFactoryContext context);
+    public InvalidConfigurationValueException(final String message) {
+        super(message);
+    }
 }
