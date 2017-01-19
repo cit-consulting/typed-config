@@ -21,6 +21,7 @@ import com.github.steveash.typedconfig.keycombine.KeyCombinationStrategy;
 import com.github.steveash.typedconfig.keycombine.SmartDelimitedKeyCombinationStrategy;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolverRegistry;
+import com.github.steveash.typedconfig.temp.Source;
 import com.github.steveash.typedconfig.validation.BeanValidatorValidationStrategy;
 import com.github.steveash.typedconfig.validation.NoValidationStrategy;
 import com.github.steveash.typedconfig.validation.ValidationStrategy;
@@ -96,7 +97,7 @@ public class ConfigProxyFactory {
         private Builder() {
         }
 
-        public ConfigProxyFactory build() {
+        ConfigProxyFactory build() {
             return new ConfigProxyFactory(buildContext());
         }
 

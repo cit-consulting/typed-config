@@ -3,7 +3,7 @@ package com.github.steveash.typedconfig.temp;
 import com.github.steveash.typedconfig.ConfigProxyFactory;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 
-public class SnapshotConfig<E> implements Config {
+public final class SnapshotConfig<E> implements Config {
     private final BaseHierarchicalConfiguration baseHierarchicalConfiguration;
     private final Class<E> interfaze;
 
@@ -14,7 +14,7 @@ public class SnapshotConfig<E> implements Config {
     }
 
     @Override
-    public Object getProxy() {
+    public E getProxy() {
         return ConfigProxyFactory.getDefault().make(interfaze, baseHierarchicalConfiguration);
     }
 }

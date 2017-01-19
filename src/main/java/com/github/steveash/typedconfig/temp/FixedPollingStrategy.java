@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -14,16 +13,14 @@ public class FixedPollingStrategy implements PollingStrategy {
     private final long interval;
     private final TimeUnit units;
 
-
     public FixedPollingStrategy(long interval, TimeUnit units) {
         this.executor = Executors.newSingleThreadScheduledExecutor(ThreadFactories.newNamedDaemonThreadFactory());
         this.interval = interval;
         this.units = units;
-
     }
 
     @Override
-    public Future<?> execute(final Runnable callback) {
+    public void execute(final Runnable callback) {
         while (true) {
             try {
                 callback.run();
@@ -34,11 +31,11 @@ public class FixedPollingStrategy implements PollingStrategy {
                     units.sleep(interval);
                 } catch (InterruptedException e1) {
                     Thread.currentThread().interrupt();
-                    return Futures.immediateFailure(e);
+                    return;
                 }
             }
         }
-        return executor.scheduleWithFixedDelay(() -> {
+        executor.scheduleWithFixedDelay(() -> {
             try {
                 callback.run();
             } catch (Exception e) {
@@ -51,5 +48,4 @@ public class FixedPollingStrategy implements PollingStrategy {
     public void shutdown() {
         executor.shutdown();
     }
-
 }

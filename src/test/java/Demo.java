@@ -1,9 +1,7 @@
-import com.github.steveash.typedconfig.temp.AutoReloadableDynamicConfig;
-import com.github.steveash.typedconfig.temp.Config;
+import com.github.steveash.typedconfig.ConfigProxyFactory;
 import com.github.steveash.typedconfig.temp.DynamicConfig;
 import com.github.steveash.typedconfig.temp.FixedPollingStrategy;
 import com.github.steveash.typedconfig.temp.PollingStrategy;
-import com.github.steveash.typedconfig.temp.ReloadableConfig;
 import com.github.steveash.typedconfig.temp.SnapshotConfig;
 import com.github.steveash.typedconfig.temp.Source;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
@@ -29,13 +27,61 @@ public class Demo {
         defaultConfiguration.append(ConfigurationConverter.getConfiguration(properties));
         defaultConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
 
-        Config snapshotConfig = new SnapshotConfig<>(Proxy.class, defaultConfiguration);
+        SnapshotConfig<Proxy> snapshotConfig = new SnapshotConfig<>(Proxy.class, defaultConfiguration);
 
-        Proxy singleProxy = (Proxy) snapshotConfig.getProxy();
+        Proxy singleProxy = snapshotConfig.getProxy();
         System.out.println("singleProxy" + " : " + singleProxy.getName());
         System.out.println("singleProxy" + " : " + singleProxy.getAge());
 
-        Source source = () -> {
+        TestDynamicSource<Proxy> source = new TestDynamicSource<>(Proxy.class);
+        DynamicConfig<Proxy> simpleDynamicConfig = new DynamicConfig<>(source);
+        Proxy simpleDynamicProxy = simpleDynamicConfig.getProxy();
+        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
+        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
+
+        simpleDynamicProxy = simpleDynamicConfig.getProxy();
+        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
+        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
+
+        PollingStrategy pollingStrategy = new FixedPollingStrategy(1, TimeUnit.SECONDS);
+
+        TestAutoReloadableSource<Proxy> autoReloadableSource = new TestAutoReloadableSource<>(Proxy.class, pollingStrategy);
+        DynamicConfig<Proxy> dynamicConfig = new DynamicConfig<>(autoReloadableSource);
+        Proxy dynamicProxy = dynamicConfig.getProxy();
+        System.out.println("dynamicProxy" + " : " + dynamicProxy.getName());
+        System.out.println("dynamicProxy" + " : " + dynamicProxy.getAge());
+
+        for (int i = 0; i < 100; i++) {
+            Thread.sleep(500);
+            dynamicProxy = dynamicConfig.getProxy();
+            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getName());
+            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getAge());
+        }
+    }
+
+    public interface Proxy {
+        String getName();
+
+        //        @Range(min = 18, max = 60)
+        Integer getAge();
+    }
+
+    public static class TestDynamicSource<E> implements Source<E> {
+        private final Class<E> interfaze;
+        private BaseHierarchicalConfiguration configuration;
+
+        TestDynamicSource(Class<E> interfaze) {
+            this.interfaze = interfaze;
+            this.configuration = getBaseHierarchicalConfiguration();
+        }
+
+        @Override
+        public Class<E> getProxyClass() {
+            return interfaze;
+        }
+
+        @Override
+        public BaseHierarchicalConfiguration getBaseHierarchicalConfiguration() {
             Map<String, Object> props = new HashMap<>();
             props.put("name", "Dima");
             props.put("age", (new Random().nextInt(100) + 10));
@@ -47,36 +93,70 @@ public class Demo {
                             .getConfiguration(ConfigurationConverter
                                     .getProperties(new MapConfiguration(props))));
             configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-            return configuration;
-        };
+            try {
+                ConfigProxyFactory.getDefault().make(interfaze, configuration);
+                this.configuration = configuration;
+            } catch (Exception e) {
+                if (this.configuration == null) {
+                    throw new RuntimeException("Невалидная конфигурация!!!!", e);
+                }
 
-        ReloadableConfig simpleDynamicConfig = new DynamicConfig<>(Proxy.class, source);
-        Proxy simpleDynamicProxy = (Proxy) simpleDynamicConfig.getProxy();
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
-
-        simpleDynamicProxy = (Proxy) simpleDynamicConfig.getProxy();
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
-
-        PollingStrategy pollingStrategy = new FixedPollingStrategy(1, TimeUnit.SECONDS);
-
-        ReloadableConfig dynamicConfig = new AutoReloadableDynamicConfig<>(Proxy.class, source, pollingStrategy);
-        Proxy dynamicProxy = (Proxy) dynamicConfig.getProxy();
-        System.out.println("dynamicProxy" + " : " + dynamicProxy.getName());
-        System.out.println("dynamicProxy" + " : " + dynamicProxy.getAge());
-
-        for (int i = 0; i < 100; i++) {
-            Thread.sleep(500);
-            dynamicProxy = (Proxy) dynamicConfig.getProxy();
-            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getName());
-            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getAge());
+                System.err.println("Невалидная конфигурация!!!!");
+            }
+            return this.configuration;
         }
     }
 
-    public interface Proxy {
-        String getName();
+    public static class TestAutoReloadableSource<E> implements Source<E> {
+        private final Class<E> interfaze;
+        private final PollingStrategy pollingStrategy;
+        private BaseHierarchicalConfiguration configuration;
 
-        Integer getAge();
+        TestAutoReloadableSource(Class<E> interfaze, PollingStrategy pollingStrategy) {
+            this.interfaze = interfaze;
+            this.configuration = getBaseHierarchicalConfiguration();
+            this.pollingStrategy = pollingStrategy;
+            this.pollingStrategy.execute(() -> {
+                try {
+                    reload();
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to poll configuration", e);
+                }
+            });
+        }
+
+        @Override
+        public Class<E> getProxyClass() {
+            return interfaze;
+        }
+
+        @Override
+        public BaseHierarchicalConfiguration getBaseHierarchicalConfiguration() {
+            return configuration;
+        }
+
+        private void reload() {
+            Map<String, Object> props = new HashMap<>();
+            props.put("name", "Dima");
+            props.put("age", (new Random().nextInt(100) + 10));
+
+            BaseHierarchicalConfiguration configuration;
+            configuration = new BaseHierarchicalConfiguration();
+            configuration
+                    .append(ConfigurationConverter
+                            .getConfiguration(ConfigurationConverter
+                                    .getProperties(new MapConfiguration(props))));
+            configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+            try {
+                ConfigProxyFactory.getDefault().make(interfaze, configuration);
+                this.configuration = configuration;
+            } catch (Exception e) {
+                if (this.configuration == null) {
+                    throw new RuntimeException("Невалидная конфигурация!!!!", e);
+                }
+
+                System.err.println("Невалидная конфигурация!!!!");
+            }
+        }
     }
 }

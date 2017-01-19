@@ -3,17 +3,14 @@ package com.github.steveash.typedconfig.temp;
 import com.github.steveash.typedconfig.ConfigProxyFactory;
 
 public class DynamicConfig<E> implements ReloadableConfig {
-    final Class<E> interfaze;
-    final Source source;
+    private final Source<E> source;
 
-    public DynamicConfig(Class<E> interfaze, Source source) {
-        this.interfaze = interfaze;
+    public DynamicConfig(Source<E> source) {
         this.source = source;
-        getProxy();
     }
 
     @Override
-    public Object getProxy() {
-        return ConfigProxyFactory.getDefault().make(interfaze, source.getBaseHierarchicalConfiguration());
+    public E getProxy() {
+        return ConfigProxyFactory.getDefault().make(source.getProxyClass(), source.getBaseHierarchicalConfiguration());
     }
 }

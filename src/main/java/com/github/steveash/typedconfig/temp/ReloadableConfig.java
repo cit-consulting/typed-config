@@ -1,4 +1,4 @@
 package com.github.steveash.typedconfig.temp;
 
-public interface ReloadableConfig extends Config {
+interface ReloadableConfig<E> extends Config<E> {
 }
