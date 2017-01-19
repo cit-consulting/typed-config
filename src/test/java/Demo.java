@@ -1,4 +1,11 @@
-import com.github.steveash.typedconfig.temp.*;
+import com.github.steveash.typedconfig.temp.AutoReloadableDynamicConfig;
+import com.github.steveash.typedconfig.temp.Config;
+import com.github.steveash.typedconfig.temp.DynamicConfig;
+import com.github.steveash.typedconfig.temp.FixedPollingStrategy;
+import com.github.steveash.typedconfig.temp.PollingStrategy;
+import com.github.steveash.typedconfig.temp.ReloadableConfig;
+import com.github.steveash.typedconfig.temp.SnapshotConfig;
+import com.github.steveash.typedconfig.temp.Source;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.ConfigurationConverter;
 import org.apache.commons.configuration2.MapConfiguration;
@@ -43,7 +50,7 @@ public class Demo {
             return configuration;
         };
 
-        ReloadableConfig simpleDynamicConfig = new DynamicConfig<>(Proxy.class, source, defaultConfiguration);
+        ReloadableConfig simpleDynamicConfig = new DynamicConfig<>(Proxy.class, source);
         Proxy simpleDynamicProxy = (Proxy) simpleDynamicConfig.getProxy();
         System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
         System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
@@ -54,7 +61,7 @@ public class Demo {
 
         PollingStrategy pollingStrategy = new FixedPollingStrategy(1, TimeUnit.SECONDS);
 
-        ReloadableConfig dynamicConfig = new AutoReloadableDynamicConfig<>(Proxy.class, source, defaultConfiguration, pollingStrategy);
+        ReloadableConfig dynamicConfig = new AutoReloadableDynamicConfig<>(Proxy.class, source, pollingStrategy);
         Proxy dynamicProxy = (Proxy) dynamicConfig.getProxy();
         System.out.println("dynamicProxy" + " : " + dynamicProxy.getName());
         System.out.println("dynamicProxy" + " : " + dynamicProxy.getAge());
