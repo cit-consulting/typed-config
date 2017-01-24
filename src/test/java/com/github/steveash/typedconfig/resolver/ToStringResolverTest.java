@@ -30,8 +30,8 @@ public class ToStringResolverTest {
     public void testResolve() throws Exception {
         ToStringResolver resolver = new ToStringResolver(TestIface.class,
                 ImmutableMap.of(
-                        TestIface.class.getDeclaredMethod("getA"), new InstanceValueResolver(42),
-                        TestIface.class.getDeclaredMethod("getB"), new InstanceValueResolver("Steve")));
+                        TestIface.class.getDeclaredMethod("getA"), new InstanceValueResolver(42).resolve(),
+                        TestIface.class.getDeclaredMethod("getB"), new InstanceValueResolver("Steve").resolve()));
 
         assertEquals("TestIface[getA=42,getB=Steve]", resolver.resolve());
     }

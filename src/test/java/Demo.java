@@ -4,11 +4,13 @@ import com.github.steveash.typedconfig.temp.FixedPollingStrategy;
 import com.github.steveash.typedconfig.temp.PollingStrategy;
 import com.github.steveash.typedconfig.temp.SnapshotConfig;
 import com.github.steveash.typedconfig.temp.Source;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.ConfigurationConverter;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -39,7 +41,6 @@ public class Demo {
         System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
         System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
 
-        simpleDynamicProxy = simpleDynamicConfig.getProxy();
         System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
         System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
 
@@ -53,7 +54,7 @@ public class Demo {
 
         for (int i = 0; i < 100; i++) {
             Thread.sleep(500);
-            dynamicProxy = dynamicConfig.getProxy();
+//            dynamicProxy = dynamicConfig.getProxy();
             System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getName());
             System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getAge());
         }
@@ -68,6 +69,7 @@ public class Demo {
 
     public static class TestDynamicSource<E> implements Source<E> {
         private final Class<E> interfaze;
+        private ImmutableMap<Method, Object> methodObjectImmutableMap;
         private BaseHierarchicalConfiguration configuration;
 
         TestDynamicSource(Class<E> interfaze) {
@@ -105,12 +107,24 @@ public class Demo {
             }
             return this.configuration;
         }
+
+        @Override
+        public void bind(ImmutableMap<Method, Object> methodObjectImmutableMap) {
+            this.methodObjectImmutableMap = methodObjectImmutableMap;
+        }
+
+        @Override
+        public Object getValue(Method method) {
+            return methodObjectImmutableMap.get(method);
+        }
     }
 
     public static class TestAutoReloadableSource<E> implements Source<E> {
         private final Class<E> interfaze;
         private final PollingStrategy pollingStrategy;
         private BaseHierarchicalConfiguration configuration;
+        private ImmutableMap<Method, Object> methodObjectImmutableMap;
+
 
         TestAutoReloadableSource(Class<E> interfaze, PollingStrategy pollingStrategy) {
             this.interfaze = interfaze;
@@ -123,6 +137,16 @@ public class Demo {
                     throw new RuntimeException("Failed to poll configuration", e);
                 }
             });
+        }
+
+        @Override
+        public void bind(ImmutableMap<Method, Object> methodObjectImmutableMap) {
+            this.methodObjectImmutableMap = methodObjectImmutableMap;
+        }
+
+        @Override
+        public Object getValue(Method method) {
+            return methodObjectImmutableMap.get(method);
         }
 
         @Override

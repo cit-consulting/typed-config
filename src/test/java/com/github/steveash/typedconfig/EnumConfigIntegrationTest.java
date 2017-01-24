@@ -20,6 +20,7 @@ import com.github.steveash.typedconfig.annotation.Config;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.sync.LockMode;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,7 +52,7 @@ public class EnumConfigIntegrationTest {
     @Test
     public void shouldUpdateNestedTypeReferences() throws Exception {
         assertEquals(Color.RED, proxy.getColors().get(0));
-        assertEquals(Color.BLACK, proxy.getColors().get(1));
+        assertEquals(Color.RED, proxy.getColors().get(1));
 
         xmlConfig.setProperty("color(0)", "BLACK");
 

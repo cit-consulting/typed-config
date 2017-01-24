@@ -35,12 +35,11 @@ public class EnumValueResolverFactory extends SimpleValueResolverFactory {
         final Class enumType = binding.getDataType().getRawType();
         final String key = binding.getConfigKeyToLookup();
         return new ValueResolver() {
-            private final Object cacheValue = StringUtils.isBlank(config.getString(key, null))
-                    ? null : resolveEnumInstance(config.getString(key, null));
 
             @Override
             public Object resolve() {
-                return cacheValue;
+                return StringUtils.isBlank(config.getString(key, null))
+                        ? null : resolveEnumInstance(config.getString(key, null));
             }
 
             private Object resolveEnumInstance(String enumLabel) {

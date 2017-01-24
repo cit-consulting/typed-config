@@ -21,6 +21,7 @@ import com.github.steveash.typedconfig.keycombine.KeyCombinationStrategy;
 import com.github.steveash.typedconfig.keycombine.SmartDelimitedKeyCombinationStrategy;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueResolverRegistry;
+import com.github.steveash.typedconfig.resolver.type.ProxyValueResolverFactory;
 import com.github.steveash.typedconfig.temp.Source;
 import com.github.steveash.typedconfig.validation.BeanValidatorValidationStrategy;
 import com.github.steveash.typedconfig.validation.NoValidationStrategy;
@@ -76,6 +77,24 @@ public class ConfigProxyFactory {
         ValueResolverFactory factory = context.getRegistry().lookup(binding);
 
         T o = (T) factory.makeForThis(binding, configuration, context).resolve();
+        Validation.buildDefaultValidatorFactory()
+                .getValidator()
+                .validate(o);
+
+        return (T) context.getValidationStrategy().validate(o);
+    }
+
+    public <T> T makeDynamic(Source source) {
+        Class interfaze = source.getProxyClass();
+        Preconditions.checkNotNull(interfaze);
+        Preconditions.checkArgument(interfaze.isInterface(), "You can only build proxies for interfaces");
+//        configuration.addConfigurationListener(context);
+        // the context listens to the root configuration because the subnode configs dont seem to propagate events
+
+        ConfigBinding binding = ConfigBinding.makeRootBinding(TypeToken.of(interfaze));
+        ProxyValueResolverFactory factory = new ProxyValueResolverFactory();
+
+        T o = (T) factory.makeForThis(binding, source.getBaseHierarchicalConfiguration(), context).resolve();
         Validation.buildDefaultValidatorFactory()
                 .getValidator()
                 .validate(o);

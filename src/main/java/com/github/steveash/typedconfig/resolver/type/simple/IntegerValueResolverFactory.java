@@ -35,11 +35,10 @@ public class IntegerValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(Integer.class, key) {
-            private final Object cacheValue = config.getInteger(key, null);
 
             @Override
             public Integer resolve() {
-                return (Integer) cacheValue;
+                return config.getInteger(key, null);
             }
         };
     }

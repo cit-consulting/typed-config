@@ -26,9 +26,9 @@ import java.util.Map.Entry;
  */
 public class ToStringResolver implements ValueResolver {
     private final Class<?> interfaze;
-    private final ImmutableMap<Method, ValueResolver> resolverMap;
+    private final ImmutableMap<Method, Object> resolverMap;
 
-    public ToStringResolver(Class<?> interfaze, ImmutableMap<Method, ValueResolver> resolverMap) {
+    public ToStringResolver(Class<?> interfaze, ImmutableMap<Method, Object> resolverMap) {
         this.interfaze = interfaze;
         this.resolverMap = resolverMap;
     }
@@ -38,9 +38,9 @@ public class ToStringResolver implements ValueResolver {
         StringBuilder sb = new StringBuilder();
         sb.append(interfaze.getSimpleName());
         sb.append('[');
-        for (Entry<Method, ValueResolver> entry : resolverMap.entrySet()) {
+        for (Entry<Method, Object> entry : resolverMap.entrySet()) {
             sb.append(entry.getKey().getName()).append("=");
-            Object result = entry.getValue().resolve();
+            Object result = entry.getValue();
             sb.append(result == null ? "null" : result.toString());
             sb.append(',');
         }

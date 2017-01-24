@@ -37,16 +37,16 @@ public class HashCodeResolverTest {
     public void setUp() throws Exception {
         configA42 = new HashCodeResolver(ConfigA.class,
                 ImmutableMap.of(
-                        ConfigA.class.getDeclaredMethod("getA"), new InstanceValueResolver(42)));
+                        ConfigA.class.getDeclaredMethod("getA"), new InstanceValueResolver(42).resolve()));
         configA43 = new HashCodeResolver(ConfigA.class,
                 ImmutableMap.of(
-                        ConfigA.class.getDeclaredMethod("getA"), new InstanceValueResolver(43)));
+                        ConfigA.class.getDeclaredMethod("getA"), new InstanceValueResolver(43).resolve()));
         configB42 = new HashCodeResolver(ConfigB.class,
                 ImmutableMap.of(
-                        ConfigB.class.getDeclaredMethod("getB"), new InstanceValueResolver(42)));
+                        ConfigB.class.getDeclaredMethod("getB"), new InstanceValueResolver(42).resolve()));
         configB43 = new HashCodeResolver(ConfigB.class,
                 ImmutableMap.of(
-                        ConfigB.class.getDeclaredMethod("getB"), new InstanceValueResolver(43)));
+                        ConfigB.class.getDeclaredMethod("getB"), new InstanceValueResolver(43).resolve()));
     }
 
     @Test

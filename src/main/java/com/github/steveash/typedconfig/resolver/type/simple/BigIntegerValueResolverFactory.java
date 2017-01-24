@@ -36,11 +36,10 @@ public class BigIntegerValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(BigInteger.class, key) {
-            private final Object cacheValue = config.getBigInteger(key, null);
 
             @Override
             public BigInteger resolve() {
-                return (BigInteger) cacheValue;
+                return config.getBigInteger(key, null);
             }
         };
     }

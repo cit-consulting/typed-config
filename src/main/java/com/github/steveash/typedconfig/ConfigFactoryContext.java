@@ -69,14 +69,14 @@ public class ConfigFactoryContext {
      * @param newMethodBinding
      * @param parentBinding    @return
      */
-    public ValueResolver makeResolverForBinding(HierarchicalConfiguration config, ConfigBinding newMethodBinding,
+    public Object makeResolverForBinding(HierarchicalConfiguration config, ConfigBinding newMethodBinding,
                                                 ConfigBinding parentBinding) {
         ValueResolverFactory factory = getRegistry().lookup(newMethodBinding);
 
         switch (factory.getValueType()) {
             case Container:
             case Simple:
-                return factory.makeForThis(newMethodBinding, config, this);
+                return factory.makeForThis(newMethodBinding, config, this).resolve();
 
             case Nested:
                 Preconditions.checkNotNull(parentBinding);
@@ -84,7 +84,7 @@ public class ConfigFactoryContext {
 
                 HierarchicalConfiguration subConfig = config.configurationAt(newMethodBinding.getConfigKeyToLookup());
                 ConfigBinding subBinding = newMethodBinding.withKey(subConfig.getRootElementName());
-                return factory.makeForThis(subBinding, subConfig, this);
+                return factory.makeForThis(subBinding, subConfig, this).resolve();
 
             default:
                 throw new IllegalArgumentException("dont know how to handle value type: " + factory.getValueType());

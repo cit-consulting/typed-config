@@ -11,6 +11,6 @@ public class DynamicConfig<E> implements ReloadableConfig {
 
     @Override
     public E getProxy() {
-        return ConfigProxyFactory.getDefault().make(source.getProxyClass(), source.getBaseHierarchicalConfiguration());
+        return ConfigProxyFactory.getDefault().makeDynamic(source);
     }
 }

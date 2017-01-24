@@ -29,6 +29,6 @@ import java.lang.reflect.Method;
  */
 interface ValueResolverForBindingFactory {
 
-    ValueResolver makeResolverForBinding(ConfigBinding binding, Class<?> interfaze, Method method,
+    Object makeResolverForBinding(ConfigBinding binding, Class<?> interfaze, Method method,
                                          HierarchicalConfiguration config);
 }

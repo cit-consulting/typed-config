@@ -27,9 +27,9 @@ import java.lang.reflect.Method;
 public class HashCodeResolver implements ValueResolver {
 
     private final Class<?> interfaze;
-    private final ImmutableMap<Method, ValueResolver> proxyMethodResolvers;
+    private final ImmutableMap<Method, Object> proxyMethodResolvers;
 
-    public HashCodeResolver(Class<?> interfaze, ImmutableMap<Method, ValueResolver> resolvers) {
+    public HashCodeResolver(Class<?> interfaze, ImmutableMap<Method, Object> resolvers) {
         this.interfaze = interfaze;
         this.proxyMethodResolvers = resolvers;
     }
@@ -37,8 +37,8 @@ public class HashCodeResolver implements ValueResolver {
     @Override
     public Object resolve() {
         HashCodeBuilder builder = new HashCodeBuilder();
-        for (ValueResolver resolver : proxyMethodResolvers.values()) {
-            builder.append(resolver.resolve());
+        for (Object resolver : proxyMethodResolvers.values()) {
+            builder.append(resolver);
         }
         return builder.append(interfaze.getCanonicalName()).build();
     }

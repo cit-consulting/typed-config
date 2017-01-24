@@ -16,6 +16,7 @@
 
 package com.github.steveash.typedconfig;
 
+import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class ConfigProxyFactoryTest {
 
     @Test
     public void shouldBuildDefaultWithoutException() throws Exception {
-        ConfigProxyFactory.getDefault().make(Proxy.class, mock(HierarchicalConfiguration.class));
+        ConfigProxyFactory.getDefault().make(Proxy.class, mock(BaseHierarchicalConfiguration.class));
     }
 
     public interface Proxy {

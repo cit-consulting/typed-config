@@ -47,5 +47,4 @@ public interface ValueResolverFactory {
      * The latter being hierarchical, nested in which case the complex class handles itself
      */
     ValueType getValueType();
-
 }

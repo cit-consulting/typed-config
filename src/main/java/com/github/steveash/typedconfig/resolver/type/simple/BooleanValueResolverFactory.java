@@ -70,11 +70,10 @@ public class BooleanValueResolverFactory extends SimpleValueResolverFactory {
     private ConvertableValueResolver makeNormalBooleanResolver(final String key,
                                                                final HierarchicalConfiguration config) {
         return new ConvertableValueResolver(Boolean.class, key) {
-            private final Object cacheValue = config.getBoolean(key, null);
 
             @Override
             public Boolean resolve() {
-                return (Boolean) cacheValue;
+                return config.getBoolean(key, null);
             }
         };
     }

@@ -52,9 +52,9 @@ public class ConfigValueDefaultValueStrategy implements DefaultValueStrategy {
         String defaultLookup = configValue.defaultLookup();
         if (isNotBlank(defaultLookup)) {
 
-            ValueResolver defaultResolver = context.makeResolverForBinding(
+            Object defaultObject= context.makeResolverForBinding(
                     config, ConfigBinding.makeForKeyAndType(defaultLookup, binding.getDataType()), null);
-            resolver = new DefaultLookupValueResolverDecorator(resolver, defaultResolver);
+            resolver = new DefaultLookupValueResolverDecorator(resolver, defaultObject);
         }
 
         String defaultValue = configValue.defaultValue();

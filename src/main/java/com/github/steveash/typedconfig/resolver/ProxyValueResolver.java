@@ -18,7 +18,6 @@ package com.github.steveash.typedconfig.resolver;
 
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
-import com.github.steveash.typedconfig.Option;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -70,45 +69,38 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
     }
 
     private <T> T tryToMake(Class<T> interfaze, HierarchicalConfiguration configuration) throws NoSuchMethodException {
-        Builder<Method, ValueResolver> builder = ImmutableMap.builder();
+        Builder<Method, Object> builder = ImmutableMap.builder();
         for (Method method : interfaze.getDeclaredMethods()) {
             builder.put(method, makeResolverForMethod(interfaze, method, configuration));
         }
-        return makeProxyForResolvers(interfaze, builder.build());
+        return makeProxyForResolvers(interfaze, builder.build(), configuration);
     }
 
-    private ValueResolver makeResolverForMethod(Class<?> interfaze, Method method, HierarchicalConfiguration config) {
+    private Object makeResolverForMethod(Class<?> interfaze, Method method, HierarchicalConfiguration config) {
 
         ConfigBinding newMethodBinding = context.getBindingFor(interfaze, method, config);
-        if (newMethodBinding.getOptions().contains(Option.LOOKUP_RESULT)) {
-            return new LookupValueResolver(config, newMethodBinding, interfaze, method, this);
-        }
-
         return makeResolverForBinding(newMethodBinding, interfaze, method, config);
     }
 
-    public ValueResolver makeResolverForBinding(ConfigBinding binding, Class<?> interfaze, Method method,
-                                                HierarchicalConfiguration config) {
-        ValueResolver resolver = context.makeResolverForBinding(config, binding, parentBinding);
-
-        resolver = context.getDefaultStrategy()
-                .decorateForDefaults(resolver, config, binding, context, interfaze, method);
-        return resolver;
+    public Object makeResolverForBinding(ConfigBinding binding, Class<?> interfaze, Method method,
+                                         HierarchicalConfiguration config) {
+        return context.makeResolverForBinding(config, binding, parentBinding);
     }
 
     @SuppressWarnings("unchecked")
     private <T> T makeProxyForResolvers(final Class<?> interfaze,
-                                        final ImmutableMap<Method, ValueResolver> propertyResolvers) throws NoSuchMethodException {
+                                        final ImmutableMap<Method, Object> propertyResolvers, HierarchicalConfiguration configuration) throws NoSuchMethodException {
 
-        final ImmutableMap<Method, ValueResolver> allResolvers = addInternalResolvers(interfaze,
+        final ImmutableMap<Method, Object> allResolvers = addInternalResolvers(interfaze,
                 propertyResolvers);
+
         final Method equalsMethod = Object.class.getDeclaredMethod("equals", Object.class);
 
         InvocationHandler handler = (proxy, method, args) -> {
 
-            ValueResolver valueResolver = allResolvers.get(method);
-            if (valueResolver != null) {
-                return valueResolver.resolve();
+            Object value = allResolvers.get(method);
+            if (value != null) {
+                return value;
             }
             if (equalsMethod.equals(method)) {
                 return ProxyValueResolver.this.proxyEquals(interfaze, propertyResolvers, args[0]);
@@ -120,8 +112,8 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
                 new Class<?>[]{interfaze, ProxiedConfiguration.class}, handler);
     }
 
-    private ImmutableMap<Method, ValueResolver> addInternalResolvers(Class<?> interfaze,
-                                                                     ImmutableMap<Method, ValueResolver> resolverMap) throws NoSuchMethodException {
+    private ImmutableMap<Method, Object> addInternalResolvers(Class<?> interfaze,
+                                                              ImmutableMap<Method, Object> resolverMap) throws NoSuchMethodException {
 
         ValueResolver hashResolver = makeHashResolver(interfaze, resolverMap);
         ValueResolver toStringResolver = makeToStringResolver(interfaze, resolverMap);
@@ -133,27 +125,25 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
         Method getIfaceMethod = ProxiedConfiguration.class.getDeclaredMethod("getInterfaceClass");
         Method getResolversMethod = ProxiedConfiguration.class.getDeclaredMethod("getResolvers");
 
-        Builder<Method, ValueResolver> builder = ImmutableMap.builder();
+        Builder<Method, Object> builder = ImmutableMap.builder();
         builder.putAll(resolverMap);
-        builder.put(hashMethod, hashResolver);
-        builder.put(toStringMethod, toStringResolver);
-        builder.put(getIfaceMethod, getIfaceResolver);
-        builder.put(getResolversMethod, getResolversResolver);
+        builder.put(hashMethod, hashResolver.resolve());
+        builder.put(toStringMethod, toStringResolver.resolve());
+        builder.put(getIfaceMethod, getIfaceResolver.resolve());
+        builder.put(getResolversMethod, getResolversResolver.resolve());
         return builder.build();
     }
 
-    private ValueResolver makeToStringResolver(Class<?> interfaze, ImmutableMap<Method, ValueResolver> resolverMap) {
-        ToStringResolver resolver = new ToStringResolver(interfaze, resolverMap);
-        return resolver;
+    private ValueResolver makeToStringResolver(Class<?> interfaze, ImmutableMap<Method, Object> resolverMap) {
+        return new ToStringResolver(interfaze, resolverMap);
 
     }
 
-    private ValueResolver makeHashResolver(Class<?> interfaze, ImmutableMap<Method, ValueResolver> resolverMap) {
-        HashCodeResolver resolver = new HashCodeResolver(interfaze, resolverMap);
-        return resolver;
+    private ValueResolver makeHashResolver(Class<?> interfaze, ImmutableMap<Method, Object> resolverMap) {
+        return new HashCodeResolver(interfaze, resolverMap);
     }
 
-    private boolean proxyEquals(Class<?> thisIface, ImmutableMap<Method, ValueResolver> thisResolvers, Object that) {
+    private boolean proxyEquals(Class<?> thisIface, ImmutableMap<Method, Object> thisResolvers, Object that) {
         if (!(that instanceof ProxiedConfiguration)) {
             return false;
         }
@@ -169,9 +159,9 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
             throw new IllegalStateException("not sure how the same iface can have different resolver map");
         }
 
-        for (Entry<Method, ValueResolver> thisEntry : thisResolvers.entrySet()) {
-            Object thisValue = thisEntry.getValue().resolve();
-            Object thatValue = thatResolvers.get(thisEntry.getKey()).resolve();
+        for (Entry<Method, Object> thisEntry : thisResolvers.entrySet()) {
+            Object thisValue = thisEntry.getValue();
+            Object thatValue = thatResolvers.get(thisEntry.getKey());
             if (!thisValue.equals(thatValue)) {
                 return false;
             }

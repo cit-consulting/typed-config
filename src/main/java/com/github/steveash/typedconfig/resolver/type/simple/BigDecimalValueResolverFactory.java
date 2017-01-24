@@ -36,11 +36,10 @@ public class BigDecimalValueResolverFactory extends SimpleValueResolverFactory {
 
         final String key = binding.getConfigKeyToLookup();
         return new ConvertableValueResolver(BigDecimal.class, key) {
-            private final Object cacheValue = config.getBigDecimal(key, null);
 
             @Override
             public BigDecimal resolve() {
-                return (BigDecimal) cacheValue;
+                return config.getBigDecimal(key, null);
             }
         };
     }

@@ -24,19 +24,18 @@ import com.github.steveash.typedconfig.resolver.ValueResolver;
  */
 public class DefaultLookupValueResolverDecorator extends ForwardingValueResolver {
 
-    private final ValueResolver defaultResolver;
+    private final Object defaultObject;
 
-    public DefaultLookupValueResolverDecorator(ValueResolver delegate, ValueResolver defaultResolver) {
+    public DefaultLookupValueResolverDecorator(ValueResolver delegate, Object defaultObject) {
         super(delegate);
-        this.defaultResolver = defaultResolver;
+        this.defaultObject = defaultObject;
     }
 
     @Override
     public Object resolve() {
-        Object o = delegate.resolve();
-        if (o != null)
+        if (defaultObject != null)
             return null;
 
-        return defaultResolver.resolve();
+        return defaultObject;
     }
 }

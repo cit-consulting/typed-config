@@ -22,6 +22,7 @@ import com.github.steveash.typedconfig.resolver.ProxyValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolver;
 import com.github.steveash.typedconfig.resolver.ValueResolverFactory;
 import com.github.steveash.typedconfig.resolver.ValueType;
+import com.github.steveash.typedconfig.temp.Source;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 
 /**
