@@ -118,7 +118,7 @@ public class BeanValidatorValidationStrategyTest {
         configOfProperties = new BaseHierarchicalConfiguration();
         configOfProperties.append(ConfigurationConverter.getConfiguration(properties));
         configOfProperties.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        return ConfigProxyFactory.getDefault().make(proxyClass, configOfProperties);
+        return ConfigProxyFactory.builder().beanValidation().build().make(proxyClass, configOfProperties);
     }
 
     public interface ProxyEmail {

@@ -18,6 +18,8 @@ package com.github.steveash.typedconfig.resolver;
 
 import com.github.steveash.typedconfig.ConfigBinding;
 import com.github.steveash.typedconfig.ConfigFactoryContext;
+import com.github.steveash.typedconfig.temp.SingleSource;
+import com.github.steveash.typedconfig.temp.Source;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -36,18 +38,24 @@ import java.util.Map.Entry;
 public class ProxyValueResolver implements ValueResolver, ValueResolverForBindingFactory {
 
     private final ConfigBinding parentBinding;
-    private final HierarchicalConfiguration config;
     private final ConfigFactoryContext context;
+    private final Source source;
 
     public ProxyValueResolver(ConfigBinding binding, HierarchicalConfiguration config, ConfigFactoryContext context) {
         this.parentBinding = binding;
-        this.config = config;
+        this.context = context;
+        source = new SingleSource(parentBinding.getDataType().getRawType(), config);
+    }
+
+    public ProxyValueResolver(ConfigBinding binding, Source source, ConfigFactoryContext context) {
+        this.parentBinding = binding;
+        this.source = source;
         this.context = context;
     }
 
     @Override
     public Object resolve() {
-        return make(parentBinding.getDataType().getRawType(), config);
+        return make(parentBinding.getDataType().getRawType());
     }
 
     @Override
@@ -60,20 +68,20 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
         return parentBinding.getConfigKeyToLookup();
     }
 
-    private <T> T make(Class<T> interfaze, HierarchicalConfiguration configuration) {
+    private <T> T make(Class<T> interfaze) {
         try {
-            return tryToMake(interfaze, configuration);
+            return tryToMake(interfaze);
         } catch (NoSuchMethodException e) {
             throw Throwables.propagate(e);
         }
     }
 
-    private <T> T tryToMake(Class<T> interfaze, HierarchicalConfiguration configuration) throws NoSuchMethodException {
+    private <T> T tryToMake(Class<T> interfaze) throws NoSuchMethodException {
         Builder<Method, Object> builder = ImmutableMap.builder();
         for (Method method : interfaze.getDeclaredMethods()) {
-            builder.put(method, makeResolverForMethod(interfaze, method, configuration));
+            builder.put(method, makeResolverForMethod(interfaze, method, source.getBaseHierarchicalConfiguration()));
         }
-        return makeProxyForResolvers(interfaze, builder.build(), configuration);
+        return makeProxyForResolvers(interfaze, builder.build());
     }
 
     private Object makeResolverForMethod(Class<?> interfaze, Method method, HierarchicalConfiguration config) {
@@ -89,16 +97,17 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
 
     @SuppressWarnings("unchecked")
     private <T> T makeProxyForResolvers(final Class<?> interfaze,
-                                        final ImmutableMap<Method, Object> propertyResolvers, HierarchicalConfiguration configuration) throws NoSuchMethodException {
+                                        final ImmutableMap<Method, Object> propertyResolvers) throws NoSuchMethodException {
 
         final ImmutableMap<Method, Object> allResolvers = addInternalResolvers(interfaze,
                 propertyResolvers);
 
         final Method equalsMethod = Object.class.getDeclaredMethod("equals", Object.class);
 
+        source.bind(allResolvers);
         InvocationHandler handler = (proxy, method, args) -> {
 
-            Object value = allResolvers.get(method);
+            Object value = source.getValue(method);
             if (value != null) {
                 return value;
             }
@@ -108,7 +117,9 @@ public class ProxyValueResolver implements ValueResolver, ValueResolverForBindin
 
             throw new IllegalStateException("no method is known for " + method);
         };
-        return (T) Proxy.newProxyInstance(getClass().getClassLoader(),
+        //todo use Bridge ClassLoader
+        //getClass().getClassLoader()
+        return (T) Proxy.newProxyInstance(interfaze.getClassLoader(),
                 new Class<?>[]{interfaze, ProxiedConfiguration.class}, handler);
     }
 

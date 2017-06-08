@@ -45,6 +45,7 @@ public class ConfigProxyFactory {
     /**
      * @return the default factory which uses bean validation and only caches proxies.
      */
+
     public static ConfigProxyFactory getDefault() {
         return Holder.instance;
     }
@@ -54,6 +55,10 @@ public class ConfigProxyFactory {
      */
     public static Builder builder() {
         return new Builder();
+    }
+
+    public ConfigFactoryContext getContext() {
+        return context;
     }
 
     /**
@@ -70,17 +75,13 @@ public class ConfigProxyFactory {
     public <T> T make(Class<T> interfaze, HierarchicalConfiguration configuration) {
         Preconditions.checkNotNull(interfaze);
         Preconditions.checkArgument(interfaze.isInterface(), "You can only build proxies for interfaces");
-//        configuration.addConfigurationListener(context);
-        // the context listens to the root configuration because the subnode configs dont seem to propagate events
 
         ConfigBinding binding = ConfigBinding.makeRootBinding(TypeToken.of(interfaze));
         ValueResolverFactory factory = context.getRegistry().lookup(binding);
 
-        T o = (T) factory.makeForThis(binding, configuration, context).resolve();
-        Validation.buildDefaultValidatorFactory()
-                .getValidator()
-                .validate(o);
-
+        T o = (T) factory.makeForThis(binding,
+                configuration,
+                context).resolve();
         return (T) context.getValidationStrategy().validate(o);
     }
 
@@ -88,17 +89,10 @@ public class ConfigProxyFactory {
         Class interfaze = source.getProxyClass();
         Preconditions.checkNotNull(interfaze);
         Preconditions.checkArgument(interfaze.isInterface(), "You can only build proxies for interfaces");
-//        configuration.addConfigurationListener(context);
-        // the context listens to the root configuration because the subnode configs dont seem to propagate events
 
         ConfigBinding binding = ConfigBinding.makeRootBinding(TypeToken.of(interfaze));
         ProxyValueResolverFactory factory = new ProxyValueResolverFactory();
-
-        T o = (T) factory.makeForThis(binding, source.getBaseHierarchicalConfiguration(), context).resolve();
-        Validation.buildDefaultValidatorFactory()
-                .getValidator()
-                .validate(o);
-
+        T o = (T) factory.makeForDynamic(binding, source, context).resolve();
         return (T) context.getValidationStrategy().validate(o);
     }
 
@@ -109,14 +103,14 @@ public class ConfigProxyFactory {
     public static class Builder {
 
         private final List<ValueResolverFactory> userFactories = Lists.newArrayList();
-        private ValidationStrategy validationStrategy = new BeanValidatorValidationStrategy();
+        private ValidationStrategy validationStrategy = new NoValidationStrategy();
         private DefaultValueStrategy defaultStrategy = new ConfigValueDefaultValueStrategy();
         private KeyCombinationStrategy keyStrategy = new SmartDelimitedKeyCombinationStrategy();
 
         private Builder() {
         }
 
-        ConfigProxyFactory build() {
+        public ConfigProxyFactory build() {
             return new ConfigProxyFactory(buildContext());
         }
 
@@ -128,6 +122,7 @@ public class ConfigProxyFactory {
                     keyStrategy
             );
         }
+
 
         /**
          * This means that every method invocation on a proxy will always go back to the underlying configuration
@@ -179,8 +174,8 @@ public class ConfigProxyFactory {
          *
          * @return
          */
-        public Builder noValidation() {
-            this.validationStrategy = new NoValidationStrategy();
+        public Builder validation(ValidationStrategy strategy) {
+            this.validationStrategy = strategy;
             return this;
         }
 

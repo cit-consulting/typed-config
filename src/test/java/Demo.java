@@ -1,14 +1,14 @@
 import com.github.steveash.typedconfig.ConfigProxyFactory;
-import com.github.steveash.typedconfig.temp.DynamicConfig;
+import com.github.steveash.typedconfig.resolver.Util;
 import com.github.steveash.typedconfig.temp.FixedPollingStrategy;
 import com.github.steveash.typedconfig.temp.PollingStrategy;
-import com.github.steveash.typedconfig.temp.SnapshotConfig;
 import com.github.steveash.typedconfig.temp.Source;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.ConfigurationConverter;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.hibernate.validator.constraints.Range;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -22,114 +22,56 @@ public class Demo {
         Properties properties = new Properties();
         properties.put("name", "Dima");
         properties.put("age", "27");
-
+        properties.put("child.name", "Oleg");
+        properties.put("child.age", "2");
 
         BaseHierarchicalConfiguration defaultConfiguration;
         defaultConfiguration = new BaseHierarchicalConfiguration();
         defaultConfiguration.append(ConfigurationConverter.getConfiguration(properties));
         defaultConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-
-        SnapshotConfig<Proxy> snapshotConfig = new SnapshotConfig<>(Proxy.class, defaultConfiguration);
-
-        Proxy singleProxy = snapshotConfig.getProxy();
-        System.out.println("singleProxy" + " : " + singleProxy.getName());
-        System.out.println("singleProxy" + " : " + singleProxy.getAge());
-
-        TestDynamicSource<Proxy> source = new TestDynamicSource<>(Proxy.class);
-        DynamicConfig<Proxy> simpleDynamicConfig = new DynamicConfig<>(source);
-        Proxy simpleDynamicProxy = simpleDynamicConfig.getProxy();
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
-
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getName());
-        System.out.println("simpleDynamicProxy" + " : " + simpleDynamicProxy.getAge());
+        ConfigProxyFactory configProxyFactory = ConfigProxyFactory.builder().build();
+        Proxy singleProxy = configProxyFactory.make(Proxy.class, defaultConfiguration);
+        System.out.println("singleProxy" + " : " + singleProxy);
 
         PollingStrategy pollingStrategy = new FixedPollingStrategy(1, TimeUnit.SECONDS);
-
-        TestAutoReloadableSource<Proxy> autoReloadableSource = new TestAutoReloadableSource<>(Proxy.class, pollingStrategy);
-        DynamicConfig<Proxy> dynamicConfig = new DynamicConfig<>(autoReloadableSource);
-        Proxy dynamicProxy = dynamicConfig.getProxy();
-        System.out.println("dynamicProxy" + " : " + dynamicProxy.getName());
-        System.out.println("dynamicProxy" + " : " + dynamicProxy.getAge());
+        TestAutoReloadableSource<Proxy> autoReloadableSource = new TestAutoReloadableSource<>(Proxy.class, pollingStrategy, configProxyFactory);
+        Proxy dynamicProxy = ConfigProxyFactory.builder().build().makeDynamic(autoReloadableSource);
 
         for (int i = 0; i < 100; i++) {
+            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy);
             Thread.sleep(500);
-//            dynamicProxy = dynamicConfig.getProxy();
-            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getName());
-            System.out.println("dynamicProxy" + " : " + i + " : " + dynamicProxy.getAge());
         }
     }
 
     public interface Proxy {
         String getName();
 
-        //        @Range(min = 18, max = 60)
+        @Range(min = 18, max = 60)
         Integer getAge();
+
+        Child getChild();
     }
 
-    public static class TestDynamicSource<E> implements Source<E> {
-        private final Class<E> interfaze;
-        private ImmutableMap<Method, Object> methodObjectImmutableMap;
-        private BaseHierarchicalConfiguration configuration;
+    public interface Child {
+        String getName();
 
-        TestDynamicSource(Class<E> interfaze) {
-            this.interfaze = interfaze;
-            this.configuration = getBaseHierarchicalConfiguration();
-        }
-
-        @Override
-        public Class<E> getProxyClass() {
-            return interfaze;
-        }
-
-        @Override
-        public BaseHierarchicalConfiguration getBaseHierarchicalConfiguration() {
-            Map<String, Object> props = new HashMap<>();
-            props.put("name", "Dima");
-            props.put("age", (new Random().nextInt(100) + 10));
-
-            BaseHierarchicalConfiguration configuration;
-            configuration = new BaseHierarchicalConfiguration();
-            configuration
-                    .append(ConfigurationConverter
-                            .getConfiguration(ConfigurationConverter
-                                    .getProperties(new MapConfiguration(props))));
-            configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-            try {
-                ConfigProxyFactory.getDefault().make(interfaze, configuration);
-                this.configuration = configuration;
-            } catch (Exception e) {
-                if (this.configuration == null) {
-                    throw new RuntimeException("Невалидная конфигурация!!!!", e);
-                }
-
-                System.err.println("Невалидная конфигурация!!!!");
-            }
-            return this.configuration;
-        }
-
-        @Override
-        public void bind(ImmutableMap<Method, Object> methodObjectImmutableMap) {
-            this.methodObjectImmutableMap = methodObjectImmutableMap;
-        }
-
-        @Override
-        public Object getValue(Method method) {
-            return methodObjectImmutableMap.get(method);
-        }
+        Integer getAge();
     }
 
     public static class TestAutoReloadableSource<E> implements Source<E> {
         private final Class<E> interfaze;
         private final PollingStrategy pollingStrategy;
+        private final Util util;
         private BaseHierarchicalConfiguration configuration;
         private ImmutableMap<Method, Object> methodObjectImmutableMap;
 
-
-        TestAutoReloadableSource(Class<E> interfaze, PollingStrategy pollingStrategy) {
+        TestAutoReloadableSource(Class<E> interfaze, PollingStrategy pollingStrategy, ConfigProxyFactory configProxyFactory) {
             this.interfaze = interfaze;
             this.configuration = getBaseHierarchicalConfiguration();
             this.pollingStrategy = pollingStrategy;
+
+            util = new Util(interfaze, configProxyFactory);
+
             this.pollingStrategy.execute(() -> {
                 try {
                     reload();
@@ -140,8 +82,8 @@ public class Demo {
         }
 
         @Override
-        public void bind(ImmutableMap<Method, Object> methodObjectImmutableMap) {
-            this.methodObjectImmutableMap = methodObjectImmutableMap;
+        public void bind(Map<Method, Object> methodObjectImmutableMap) {
+            this.methodObjectImmutableMap = ImmutableMap.copyOf(methodObjectImmutableMap);
         }
 
         @Override
@@ -164,6 +106,9 @@ public class Demo {
             props.put("name", "Dima");
             props.put("age", (new Random().nextInt(100) + 10));
 
+            props.put("child.name", "Oleg");
+            props.put("child.age", (new Random().nextInt(100) + 10));
+
             BaseHierarchicalConfiguration configuration;
             configuration = new BaseHierarchicalConfiguration();
             configuration
@@ -172,8 +117,10 @@ public class Demo {
                                     .getProperties(new MapConfiguration(props))));
             configuration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
             try {
-                ConfigProxyFactory.getDefault().make(interfaze, configuration);
+                ConfigProxyFactory.builder().build().make(interfaze, configuration);
                 this.configuration = configuration;
+                methodObjectImmutableMap = ImmutableMap.copyOf(util.getMapMethods(this));
+
             } catch (Exception e) {
                 if (this.configuration == null) {
                     throw new RuntimeException("Невалидная конфигурация!!!!", e);

@@ -44,4 +44,9 @@ public class ProxyValueResolverFactory implements ValueResolverFactory {
     public ValueType getValueType() {
         return ValueType.Nested;
     }
+
+    public ValueResolver makeForDynamic(final ConfigBinding binding, final Source source,
+                                     final ConfigFactoryContext context) {
+        return new ProxyValueResolver(binding, source, context);
+    }
 }

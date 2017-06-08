@@ -29,7 +29,7 @@ public class BeanValidatorValidationStrategy implements ValidationStrategy {
 
     private final Validator validator;
 
-    private BeanValidatorValidationStrategy(Validator validator) {
+    public BeanValidatorValidationStrategy(Validator validator) {
         this.validator = validator;
     }
 

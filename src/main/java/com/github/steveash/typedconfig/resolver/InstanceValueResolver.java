@@ -22,7 +22,7 @@ package com.github.steveash.typedconfig.resolver;
  *
  * @author Steve Ash
  */
-class InstanceValueResolver implements ValueResolver {
+public class InstanceValueResolver implements ValueResolver {
 
     private final Object instance;
 

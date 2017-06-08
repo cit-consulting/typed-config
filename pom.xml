@@ -22,7 +22,7 @@
 
     <groupId>com.github.steveash.typed-config</groupId>
     <artifactId>typed-config</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <licenses>
@@ -39,6 +39,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+        <spring.version>3.2.14.RELEASE_1</spring.version>
         <slf4j.version>1.7.7</slf4j.version>
         <guava.version>19.0</guava.version>
 
@@ -47,7 +48,7 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
 
-        <hibernate-validator.version>5.3.3.Final</hibernate-validator.version>
+        <hibernate-validator.version>5.0.3.Final</hibernate-validator.version>
 
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
@@ -60,146 +61,27 @@
         <developerConnection>scm:git:git@github.com:cit-consulting/typed-config.git</developerConnection>
     </scm>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>true</minimizeJar>
-                            <filters>
-                                <filter>
-                                    <artifact>com.google.guava:guava</artifact>
-                                    <excludes>
-                                        <exclude>com/google/thirdparty/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <artifactSet>
-                                <includes>
-                                    <include>com.google.guava:guava</include>
-                                    <include>commons-beanutils:commons-beanutils</include>
-                                    <include>commons-collections:commons-collections</include>
-                                </includes>
-                            </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.google.common</pattern>
-                                    <shadedPattern>${shade.package}.com.google.common</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.apache.commons</pattern>
-                                    <shadedPattern>${shade.package}.org.apache.commons</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.4.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Export-Package>
-                            !${shade.package}.*,
-                            com.github.steveash.typedconfig.*
-                        </Export-Package>
-                        <Private-Package>
-                            ${shade.package}.*
-                        </Private-Package>
-                        <Bundle-Description>
-                            ${project.description}
-                        </Bundle-Description>
-                        <Import-Package>
-                            !com.google.common.*,
-                            !org.apache.commons.beanutils,
-                            !org.apache.commons.collections,
-                            *
-                        </Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-artifacts</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>target/classes/features.xml</file>
-                                    <type>xml</type>
-                                    <classifier>features</classifier>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <additionalparam>-Xdoclint:none</additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-beans</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -290,9 +172,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.web</groupId>
+            <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
-            <version>2.2.6</version>
+            <version>3.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -302,4 +184,161 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <!--<filters>-->
+                            <!--<filter>-->
+                            <!--<artifact>com.google.guava:guava</artifact>-->
+                            <!--<excludes>-->
+                            <!--<exclude>com/google/thirdparty/**</exclude>-->
+                            <!--</excludes>-->
+                            <!--</filter>-->
+                            <!--</filters>-->
+                            <artifactSet>
+                                <includes>
+                                    <!--<include>com.google.guava:guava</include>-->
+                                    <include>commons-beanutils:commons-beanutils</include>
+                                    <include>commons-collections:commons-collections</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>commons-logging:commons-logging</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <!--<relocation>-->
+                                <!--<pattern>com.google.common</pattern>-->
+                                <!--<shadedPattern>${shade.package}.com.google.common</shadedPattern>-->
+                                <!--</relocation>-->
+                                <relocation>
+                                    <pattern>org.apache.commons.beanutils</pattern>
+                                    <shadedPattern>${shade.package}.org.apache.commons.beanutils</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons.collections</pattern>
+                                    <shadedPattern>${shade.package}.org.apache.commons.collections</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.2.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            !org.springframework.*,
+                            !org.springframework.jdbc.*,
+                            !org.springframework.transaction.*,
+                            !${shade.package}.*,
+                            com.github.steveash.typedconfig.*
+                        </Export-Package>
+                        <Private-Package>
+                            ${shade.package}.*
+                        </Private-Package>
+                        <Bundle-Description>
+                            ${project.description}
+                        </Bundle-Description>
+                        <Import-Package>
+                            <!--!com.google.common.*,-->
+                            !org.apache.commons.beanutils,
+                            !org.apache.commons.collections,
+                            org.apache.commons.logging,
+                            org.springframework.beans.factory;version="[3.2,4)";resolution:=optional,
+                            org.springframework.beans.factory.config;version="[3.2,4)";resolution:=optional,
+                            org.springframework.transaction;version="[3.2,4)";resolution:=optional,
+                            org.springframework.transaction.support;version="[3.2,4)";resolution:=optional,
+                            org.springframework.jdbc.core;version="[3.2,4)";resolution:=optional,
+                            org.springframework.jdbc.core.namedparam;version="[3.2,4)";resolution:=optional,
+                            org.springframework.jdbc.support;version="[3.2,4)";resolution:=optional,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>target/classes/features.xml</file>
+                                    <type>xml</type>
+                                    <classifier>features</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

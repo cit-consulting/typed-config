@@ -17,7 +17,6 @@
 package com.github.steveash.typedconfig;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
